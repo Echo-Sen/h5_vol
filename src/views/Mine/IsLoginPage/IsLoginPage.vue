@@ -2,11 +2,8 @@
   <!-- 登录状态 -->
   <div>
     <header>
-      <img
-        src="https://olrando.oss-cn-chengdu.aliyuncs.com/img/-3b46af98175bfce3.jpg"
-        alt="头像"
-      />
-      <h1>倚楼听风雨</h1>
+      <img :src="userInfo.avatar" alt="头像" />
+      <h1>{{ userInfo.name }}</h1>
     </header>
     <section>
       <ul>
@@ -31,7 +28,32 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      userInfo: {
+        name: '',
+        mobile: '',
+        gender: '', //性别 男：0，女：1
+        avatar: '', // 头像
+      },
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('userinfo')) {
+      this.setInfo()
+    }
+  },
+  methods: {
+    setInfo() {
+      const resUserInfo = JSON.parse(window.localStorage.getItem('userinfo'))
+      this.userInfo.name = resUserInfo.name
+      this.userInfo.mobile = resUserInfo.mobile
+      this.userInfo.gender = resUserInfo.gender
+      this.userInfo.avatar = resUserInfo.avatar
+    },
+  },
+}
 </script>
 
 <style scoped>

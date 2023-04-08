@@ -17,9 +17,15 @@ export default {
   },
   data() {
     return {
-      token: true,
+      token: false,
     }
   },
+  mounted() {
+    if (localStorage.getItem('userinfo')) {
+      this.token = true
+    }
+  },
+  methods: {},
 }
 </script>
 

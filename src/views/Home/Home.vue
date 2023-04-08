@@ -85,7 +85,6 @@ import NoticeBar from '@/components/NoticeBar/NoticeBar.vue'
 import Header from '@/components/Header/Header.vue'
 import Gird from '@/components/Grid/Grid.vue'
 import { Card } from 'vant'
-
 export default {
   name: 'Home',
   components: {
@@ -96,8 +95,11 @@ export default {
     Gird,
     [Divider.name]: Divider,
   },
-
-  methods: {},
+  mounted() {
+  },
+  methods: {
+    
+  },
 }
 </script>
 

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="profile">
+    <div class="profile" @click="login">
       <div class="profile__avatar"></div>
-      <div class="profile__name">请登录</div>
+      <div class="profile__name">点击登录</div>
     </div>
     <section>
       <ul>
@@ -27,7 +27,33 @@
 </template>
 
 <script>
-export default {}
+import { oauthUrl } from '@/api/user'
+export default {
+  data() {
+    return {}
+  },
+  created() {
+    this.$watch('$route', this.handleRouteChange)
+  },
+  methods: {
+    async login() {
+      this.getOathUrl()
+    },
+
+    async getOathUrl() {
+      // const options = {
+      //   method: 'POST',
+      //   url: '/user/login',
+      //   headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      //   data: {
+      //     redirect_uri: encodeURI('http://www.ctbucqt.cn:8080/#/login'),
+      //   },
+      // }
+      const res = await oauthUrl()
+      window.location.href = res.data.authorizeUrl
+    },
+  },
+}
 </script>
 
 <style>

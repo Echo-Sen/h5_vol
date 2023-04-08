@@ -3,9 +3,15 @@ import Router from 'vue-router'
 import Home from '@/views/Home/Home'
 import Mine from '@/views/Mine/Mine'
 import Message from '@/views/Message/Message'
+import LoginPage from '@/views//Mine//Login/login'
+import UploadPost from '@/views/Message/UploadPost/UploadPost'
 Vue.use(Router)
-export default new Router({
+const router = new Router({
   routes: [
+    {
+      path: '/',
+      component: Home
+    },
     {
       path: '/home',
       name: 'Home',
@@ -13,13 +19,26 @@ export default new Router({
     },
     {
       path: '/my',
-      Name: 'Mine',
-      component: Mine
+      name: 'Mine',
+      component: Mine,
+      meta: { requiresAuth: true } // 需要授权
     },
     {
       path: '/message',
-      Name: 'Message',
+      name: 'Message',
       component: Message
+    }, {
+      path: '/login',
+      component: LoginPage
+    },
+    {
+      path: '/uploadpost',
+      component: UploadPost
+
     }
   ]
 })
+
+export default router
+
+

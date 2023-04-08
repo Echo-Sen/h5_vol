@@ -17,12 +17,28 @@
 
 <script>
 // 数据请求
-import { getSwipeData } from '@/api/swipe'
 import { Swipe, SwipeItem } from 'vant'
 export default {
   data() {
     return {
-      images: null,
+      images: [
+        {
+          imgUrl: 'https://olrando.oss-cn-chengdu.aliyuncs.com/img/duiqi.jpg',
+          index: 0
+        },
+        {
+          imgUrl: 'https://olrando.oss-cn-chengdu.aliyuncs.com/img/duiqi.jpg',
+          index: 1
+        },
+        {
+          imgUrl: 'https://olrando.oss-cn-chengdu.aliyuncs.com/img/duiqi.jpg',
+          index: 2
+        },
+        {
+          imgUrl: 'https://olrando.oss-cn-chengdu.aliyuncs.com/img/duiqi.jpg',
+          index: 3
+        }
+      ],
     }
   },
   components: {
@@ -30,9 +46,7 @@ export default {
     [SwipeItem.name]: SwipeItem,
   },
   mounted() {
-    getSwipeData().then((res) => {
-      this.images = res.data.img
-    })
+  
   },
 }
 </script>

@@ -7,14 +7,14 @@ import postcssPxToViewport from 'postcss-px-to-viewport';
 import '@/assets/css/base.css'
 // 组件库样式
 import 'vant/lib/index.css';
-import './api/mock'
+// import './api/mock'
 // 引入路由
 import router from '@/router/index'
 // 按需引入
-import { Tabbar, TabbarItem } from 'vant';
-import { Lazyload } from 'vant';
-import { Icon } from 'vant';
+import { Tabbar, TabbarItem, Toast, Lazyload, Icon } from 'vant';
 
+// 轻提示
+Vue.use(Toast);
 // 图标
 Vue.use(Icon);
 // 懒加载
@@ -22,7 +22,6 @@ Vue.use(Lazyload);
 // TabBar
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
-
 // 适配
 const postcssPlugins = [
   postcssPxToViewport({
