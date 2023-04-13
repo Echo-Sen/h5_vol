@@ -41,14 +41,6 @@ export default {
     },
 
     async getOathUrl() {
-      // const options = {
-      //   method: 'POST',
-      //   url: '/user/login',
-      //   headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      //   data: {
-      //     redirect_uri: encodeURI('http://www.ctbucqt.cn:8080/#/login'),
-      //   },
-      // }
       const res = await oauthUrl()
       window.location.href = res.data.authorizeUrl
     },

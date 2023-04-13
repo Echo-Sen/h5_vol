@@ -11,8 +11,10 @@ import 'vant/lib/index.css';
 // 引入路由
 import router from '@/router/index'
 // 按需引入
-import { Tabbar, TabbarItem, Toast, Lazyload, Icon } from 'vant';
+import { Tabbar, TabbarItem, Toast, Lazyload, Icon,Button,Uploader } from 'vant';
 
+Vue.use(Uploader);
+Vue.use(Button)
 // 轻提示
 Vue.use(Toast);
 // 图标
@@ -37,6 +39,10 @@ const postcssPlugins = [
 // 定义全局的 postcss 实例
 Vue.prototype.$postcss = postcss(postcssPlugins);
 Vue.config.productionTip = false
+
+router.afterEach((to,from,next) => {
+  window.scrollTo(0,0);
+});
 
 
 new Vue({

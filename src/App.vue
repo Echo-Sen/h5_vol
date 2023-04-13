@@ -1,8 +1,13 @@
 <template>
   <div class="box">
     <router-view />
-    <div style="height: 5rem"></div>
+    <!-- 对于除开以下三个页面外均要隐藏tabbar -->
+    <div
+      v-if="['/', '/home', '/my', '/message'].includes($route.path)"
+      style="height: 5rem"
+    ></div>
     <van-tabbar
+      v-if="['/', '/home', '/my', '/message'].includes($route.path)"
       route
       v-model="active"
       active-color="#ee0a24"

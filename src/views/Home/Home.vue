@@ -3,7 +3,7 @@
     <!-- 轮播图 -->
     <Swipe />
     <!-- 新闻提示 -->
-    <NoticeBar :text="'使用系统遇到问题？微信号：ds204797682'" />
+    <NoticeBar :text="'使用系统遇到问题？企业微信联系 邓森'" />
     <!--  -->
     <Gird />
     <!-- 分隔符 -->
@@ -73,7 +73,7 @@
     <!-- 卡片结束 -->
 
     <!-- 底线开始 -->
-    <van-divider>我到底线了</van-divider>
+    <van-divider>没有更多了</van-divider>
     <!-- 底线结束 -->
   </div>
 </template>
@@ -95,8 +95,7 @@ export default {
     Gird,
     [Divider.name]: Divider,
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     
   },

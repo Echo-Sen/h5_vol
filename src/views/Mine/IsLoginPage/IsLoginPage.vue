@@ -1,6 +1,7 @@
 <template>
   <!-- 登录状态 -->
   <div>
+    <router-view></router-view>
     <header>
       <img :src="userInfo.avatar" alt="头像" />
       <h1>{{ userInfo.name }}</h1>
@@ -8,19 +9,39 @@
     <section>
       <ul>
         <li>
-          <a href="#"><van-icon name="manager-o" />志愿者认证</a>
+          <router-link class="a" to=""
+            ><van-icon name="manager-o" />志愿者认证</router-link
+          >
         </li>
         <li>
-          <a href="#"><van-icon name="records" />志愿者报名</a>
+          <router-link class="a" to=""
+            ><van-icon name="records" />志愿者报名</router-link
+          >
         </li>
         <li>
-          <a href="#"><van-icon name="guide-o" />使用指南</a>
+          <router-link class="a" to="/published"
+            ><van-icon name="coupon-o" />我的帖子</router-link
+          >
         </li>
         <li>
-          <a href="#"><van-icon name="search" />关于青队</a>
+          <router-link class="a" to=""
+            ><van-icon name="guide-o" />使用指南</router-link
+          >
         </li>
         <li>
-          <a href="#"><van-icon name="setting-o" />设置</a>
+          <router-link class="a" to=""
+            ><van-icon name="search" />关于青队</router-link
+          >
+        </li>
+        <li>
+          <router-link class="a" to=""
+            ><van-icon name="setting-o" />设置</router-link
+          >
+        </li>
+        <li @click="logOut">
+          <router-link  class="a" to=""
+            ><van-icon name="setting-o" />退出登录</router-link
+          >
         </li>
       </ul>
     </section>
@@ -52,6 +73,10 @@ export default {
       this.userInfo.gender = resUserInfo.gender
       this.userInfo.avatar = resUserInfo.avatar
     },
+    logOut() {
+      localStorage.removeItem('userinfo')
+       location.reload()
+    }
   },
 }
 </script>
@@ -91,7 +116,7 @@ section ul {
 section li {
   margin-bottom: 10px;
 }
-section a {
+section .a {
   display: block;
   padding: 10px;
   color: #333;
@@ -100,7 +125,7 @@ section a {
   background-color: #f6f6f6;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
-section a .van-icon {
+section .a .van-icon {
   margin-right: 3px;
 }
 

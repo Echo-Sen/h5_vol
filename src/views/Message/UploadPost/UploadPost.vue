@@ -1,7 +1,9 @@
 <template>
   <div>
-    <!-- 阻止表单默认提交 -->
-    <form @submit.prevent>
+    <h1 class="title">
+      <van-icon name="arrow-left" @click="back" class="back" />
+    </h1>
+    <form onsubmit="return false">
       <textarea
         v-model="uploadFormData.context"
         class="context"
@@ -26,39 +28,25 @@
         accept="image/*"
         preview-full-image
       />
-      <van-button type="primary" @click="submitForm">主要按钮</van-button>
+      <van-button type="primary" @click="submitForm">发布</van-button>
     </form>
   </div>
 </template>
 
 <script>
-import { Uploader } from 'vant'
-import { uploadImgData, uploadFormData } from '@/api/Upload'
-import { Button, Toast } from 'vant'
+import { uploadImgData, uploadFormData } from '@/api/upload'
+import { Button, Toast, Uploader } from 'vant'
 export default {
   data() {
     return {
       active: 0,
-      fileList: [
-        // {
-        //   url: 'https://img01.yzcdn.cn/vant/leaf.jpg',
-        //   isImage: true,
-        //   status: 'true',
-        //   message: '上传中',
-        // },
-        // // Uploader 根据文件后缀来判断是否为图片文件
-        // // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-        // {
-        //   url: 'https://img01.yzcdn.cn/vant/tree.jpg',
-        //   status: 'true',
-        //   message: '上传成功',
-        // },
-      ],
+      fileList: [], // 展示图片上传情况
       // 表单数据
       uploadFormData: {
         context: '',
         images: [],
       },
+      disable: true, // 开启提交按钮
     }
   },
   components: {
@@ -69,44 +57,55 @@ export default {
   methods: {
     // 提交表单
     async submitForm() {
-      const userInfo = JSON.parse(localStorage.getItem('userinfo'))
-      const token = JSON.parse(localStorage.getItem('userinfo')).sk
-      const option = {
-        user_id: userInfo.id,
-        username: userInfo.username,
-        context: this.uploadFormData.context,
-        images: `${this.uploadFormData.images}`,
+      if (this.disable) {
+        const userInfo = JSON.parse(localStorage.getItem('userinfo'))
+        const imageStr = this.uploadFormData.images.join('|')
+        const option = {
+          user_id: userInfo.id,
+          username: userInfo.username,
+          context: this.uploadFormData.context,
+          images: imageStr,
+        }
+        uploadFormData(option)
+          .then((res) => {
+            if (res.data.status === 1) {
+              // 禁用提交按钮
+              this.disable = false
+              Toast.success('发布成功')
+              this.$router.push('/message')
+            } else {
+              Toast.fail(res.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+            Toast.fail('请求错误')
+          })
+      } else {
+        Toast.fail('请勿反复提交')
       }
-      uploadFormData(option, token)
-        .then((res) => {
-          console.log(res)
-          Toast.success('发布成功')
-        })
-        .catch((error) => {
-          console.log(error)
-        })
     },
 
     async afterRead(file) {
       // base64
       const base64 = file.content
-      // token
-      const token = JSON.parse(localStorage.getItem('userinfo')).sk
-      // console.log('base64', base64)
-      // console.log('token', token)
-      uploadImgData(token, base64)
+      uploadImgData(base64)
         .then((res) => {
           this.uploadFormData.images.push(res.data.image)
           file.status = 'true'
           file.message = '上传成功'
         })
         .catch((error) => {
-          console.log(error)
+          // console.log(error)
           file.status = 'false'
           file.message = '上传失败'
         })
       file.status = 'uploading'
       file.message = '上传中...'
+    },
+    // 页面回退
+    back() {
+      this.$router.back()
     },
   },
 }
