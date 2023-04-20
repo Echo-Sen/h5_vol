@@ -3,14 +3,28 @@ import http from "../utils/request";
 // 请求社区数据
 export const getCommunityData = (time, limit) => {
   // 
-  return http.get(`/post/getposts?created_at=${time}&limit=${limit}`)
+  return http({
+    url: `/post/getposts?created_at=${time}&limit=${limit}`,
+    method: 'GET',
+    needToken:false
+  })
+}
+
+// 获取个人帖子
+export const getPersonData = (time, limit) => {
+  return http({
+    method: "GET",
+    url: `/auth/post/myposts?created_at=${time}&limit=${limit}`,
+    needToken:true
+  })
 }
 // 上传点赞情况
 export const postLiked = (id) => {
   return http({
     method: 'POST',
     url: '/auth/post/like',
-    data: { post_id: id }
+    data: { post_id: id },
+    needToken:true
   })
 }
 //  是否点赞
@@ -18,7 +32,8 @@ export const postIsLike = (id) => {
   return http({
     method: 'POST',
     url: "/auth/post/islike",
-    data: { post_id: id }
+    data: { post_id: id },
+    needToken:true
   })
 }
 
@@ -27,6 +42,7 @@ export const deleteCard = (id) => {
   return http({
     method: 'POST',
     url: '/auth/post/delete',
-    data: {post_id: id}
+    data: { post_id: id },
+    needToken:true
   })
 }

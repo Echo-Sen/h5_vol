@@ -1,11 +1,6 @@
 <template>
-  <div>
-    <van-button color="skyblue" plain hairline type="primary" @click="goBack"
-      >取消登录</van-button
-    >
-    <van-button color="red" plain hairline @click="login" type="primary"
-      >确认登录</van-button
-    >
+  <div class="waiting-countdown">
+    <p>{{ countdown }} 秒后自动跳转...</p>
   </div>
 </template>
 
@@ -13,18 +8,30 @@
 import { Button } from 'vant'
 import { oauthUser } from '@/api/user'
 export default {
+  mounted() {
+    this.login()
+    // 开始倒计时
+    this.interval = setInterval(() => {
+      this.countdown--
+      if (this.countdown === 0) {
+        clearInterval(this.interval) // 倒计时结束时清除定时器
+        window.location.href = 'http://www.ctbucqt.cn:8080/my'
+      }
+    }, 1000)
+  },
+  destroyed() {
+    clearInterval(this.interval) // 离开页面时清除定时器
+  },
   data() {
     return {
       res: ' ',
+      countdown: 3, // 设置初始倒计时时间
     }
   },
   components: {
     [Button.name]: Button,
   },
   methods: {
-    goBack() {
-      this.$router.push({ path: '/my' })
-    },
     login() {
       if (this.isCode()) {
         this.getOathUser()
@@ -38,8 +45,10 @@ export default {
       const res = await oauthUser(code)
       this.res = res.data
       localStorage.setItem('userinfo', JSON.stringify(res.data))
-      console.log(res);
-      window.location.href = 'http://www.ctbucqt.cn:8080/my'
+      localStorage.setItem(
+        'token_expires_at',
+        JSON.stringify(Date.now() + 24 * 60 * 60 * 1000)
+      ) // 1天后过期
     },
   },
 }

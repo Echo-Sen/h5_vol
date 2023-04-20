@@ -14,7 +14,7 @@
           >
         </li>
         <li>
-          <router-link class="a" to=""
+          <router-link class="a" to="/volsignup"
             ><van-icon name="records" />志愿者报名</router-link
           >
         </li>
@@ -29,8 +29,8 @@
           >
         </li>
         <li>
-          <router-link class="a" to=""
-            ><van-icon name="search" />关于青队</router-link
+          <router-link class="a" to="/permission"
+            ><van-icon name="search" />权限申请</router-link
           >
         </li>
         <li>
@@ -38,8 +38,13 @@
             ><van-icon name="setting-o" />设置</router-link
           >
         </li>
+        <li>
+          <router-link class="a" to="/admin"
+            ><van-icon name="setting-o" />后台管理</router-link
+          >
+        </li>
         <li @click="logOut">
-          <router-link  class="a" to=""
+          <router-link class="a" to=""
             ><van-icon name="setting-o" />退出登录</router-link
           >
         </li>
@@ -75,8 +80,9 @@ export default {
     },
     logOut() {
       localStorage.removeItem('userinfo')
-       location.reload()
-    }
+      localStorage.removeItem('token_expires_at')
+      location.reload()
+    },
   },
 }
 </script>

@@ -1,42 +1,84 @@
 <template>
   <div>
-    <h1 class="title">
-      <van-icon name="arrow-left" @click="back" class="back" />
-    </h1>
     <div class="umbrella">
+      <Back />
+
       <div class="umbrella__button-wrapper">
-        <van-button type="primary" @click="borrowUmbrella">借伞</van-button>
+        <van-button type="primary" @click="borrowUmbrella">一键借伞</van-button>
       </div>
       <div class="umbrella__button-wrapper">
-        <van-button type="default" @click="returnUmbrella">还伞</van-button>
+        <van-button type="default" @click="returnUmbrella">一键还伞</van-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Step, Steps } from 'vant';
+import { Toast } from 'vant'
+import { postUmbrella } from '@/api/umbrella'
+import { isLogin } from '@/utils/Login'
 export default {
-  components:{
-    [Steps.name]:Steps,
-    [Step.name]:Step
+  components: {
+    [Toast.name]: Toast,
   },
-   data() {
-    return {
-      active: 1,
-    };
+  data() {
+    return {}
   },
   methods: {
+    onConfirm(value) {
+      this.value = value
+      this.showPicker = false
+    },
     borrowUmbrella() {
       // 点击借伞按钮的逻辑
-      console.log('借伞')
+      if (isLogin()) {
+        const upid = this.$route.query.upid
+        const option = {
+          upid: upid,
+          type: 'borrow',
+        }
+        postUmbrella(option).then((res) => {
+          if (res.data.status) {
+            Toast({
+              message: '借伞成功',
+              icon: 'umbrella-circle',
+            })
+          } else {
+            Toast.fail({
+              message: '已借出',
+            })
+          }
+        })
+      } else {
+        Toast.fail('请先登录')
+      }
     },
     back() {
       this.$router.back()
     },
     returnUmbrella() {
-      // 点击还伞按钮的逻辑
-      console.log('还伞');
+      if (isLogin()) {
+        const upid = this.$route.query.upid
+        // 点击还伞按钮的逻辑
+        const option = {
+          upid: upid,
+          type: 'return',
+        }
+        postUmbrella(option).then((res) => {
+          if (res.data.status) {
+            Toast({
+              message: '还伞成功',
+              icon: 'umbrella-circle',
+            })
+          } else {
+            Toast.fail({
+              message: '已归还',
+            })
+          }
+        })
+      } else {
+        Toast.fail('请先登录')
+      }
     },
   },
 }
@@ -45,22 +87,43 @@ export default {
 <style scoped>
 .umbrella {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center; */
+  flex-direction: column;
+  /* align-items: center; */
+  align-items: flex-start;
+  justify-content: flex-start;
   height: 100vh;
   width: 100%;
-  background: linear-gradient(
+  /* background: linear-gradient(
     135deg,
     #d16ba5,
     #c777b9,
     #ba85cb,
     #ab93dd,
     #9ba1ef
-  );
+  ); */
+  /* background: linear-gradient(to bottom, #66cccc, #0099cc); */
+  /* background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); */
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  /* background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%); */
+  /* background-image: radial-gradient(circle 248px at center, #16d9e3 0%, #30c7ec 47%, #46aef7 100%); */
 }
 
+.umbrella .van-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  /* background-color:transparent ; */
+}
+.van-steps .van-step {
+  width: 100px;
+}
 .umbrella__button-wrapper {
-  margin: 20px;
+  align-self: center;
+  justify-self: center;
+  margin: 50px;
 }
 
 .van-button {
@@ -68,7 +131,7 @@ export default {
   align-items: center;
   justify-content: center;
   width: 150px;
-  height: 100px;
+  height: 70px;
   border-radius: 50px;
   border: none;
   font-size: 30px;
@@ -77,13 +140,6 @@ export default {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   outline: none;
-}
-
-/* 标题 */
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .van-button:active {

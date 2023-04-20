@@ -28,7 +28,7 @@
         accept="image/*"
         preview-full-image
       />
-      
+
       <van-button type="primary" @click="submitForm">发布</van-button>
     </form>
   </div>
@@ -36,7 +36,7 @@
 
 <script>
 import { updateFormData, uploadImgData } from '@/api/upload'
-import { getCommunityData } from '@/api/community'
+import { Toast } from "vant";
 export default {
   data() {
     return {
@@ -45,13 +45,14 @@ export default {
       disable: true, // 开启提交按钮,
       option: {
         post_id: undefined,
-        username: undefined,
         context: undefined,
         images: [],
       },
     }
   },
-  component: {},
+  component: {
+    [Toast.name]:Toast
+  },
   mounted() {
     this.setOption()
     console.log(this.option)
@@ -59,7 +60,6 @@ export default {
   },
   methods: {
     // 在提交表单之前，将本地全部的图片url 设置到option下的images
-
     // 提交表单
     async submitForm() {
       if (this.disable) {
@@ -71,26 +71,23 @@ export default {
         })
         let img = imageStr.join('|')
         this.option.images = img
-        updateFormData(this.option).then((res) => {
-          console.log(res)
-        })
-        //   uploadFormData(option)
-        //     .then((res) => {
-        //       if (res.data.status === 1) {
-        //         // 禁用提交按钮
-        //         this.disable = false
-        //         Toast.success('发布成功')
-        //         this.$router.push('/message')
-        //       } else {
-        //         Toast.fail(res.data.msg)
-        //       }
-        //     })
-        //     .catch((error) => {
-        //       console.log(error)
-        //       Toast.fail('请求错误')
-        //     })
-        // } else {
-        //   Toast.fail('请勿反复提交')
+        console.log(this.option)
+        updateFormData(this.option)
+          .then((res) => {
+            if (res.data.status === 1) {
+              // 禁用提交按钮
+              this.disable = false
+              Toast.success('更新成功')
+              this.$router.push({ path: '/published' })
+            } else {
+              Toast.fail(res.data.msg)
+            }
+          })
+          .catch((error) => {
+            Toast.fail('请求错误')
+          })
+      } else {
+        Toast.fail('请勿反复提交')
       }
     },
     //上传图片的回调函数
@@ -120,11 +117,8 @@ export default {
       arr.forEach((item) => {
         if (item.id == id) {
           this.option.post_id = id
-          this.option.username = JSON.parse(
-            localStorage.getItem('userinfo')
-          ).username
           this.option.context = item.context
-          const imageArr = item.images.split(',')
+          const imageArr = item.images.split('|')
           imageArr.forEach((items) => {
             this.option.images.push({ url: items })
           })

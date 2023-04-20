@@ -33,7 +33,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .box {
   min-height: 100vh;
   background-color: rgba(128, 128, 128, 0.02);

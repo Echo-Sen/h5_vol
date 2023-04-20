@@ -27,7 +27,6 @@ const router = new Router({
       path: '/my',
       name: 'Mine',
       component: Mine,
-      // meta: { requiresAuth: true }, // 需要授权
     },
     {
       path: '/message',
@@ -51,13 +50,82 @@ const router = new Router({
       path: '/message/update',
       name: 'Update',
       component: () => import('@/views/Message/Update/Update')
-    }, {
+    },
+    // 雨伞
+    {
       path: '/borrowumbrella',
-      name: 'borrowUmbrella',
-      component: () => import('@/views/borrowUmbrella/borrowUmbrella')
+      name: 'BorrowUmbrella',
+      component: () => import('@/views/BorrowUmbrella/borrowUmbrella'),
+      meta: { requireAuth: true }
+    },
+    // 反馈
+    {
+      path: '/feedback',
+      name: 'FeedBack',
+      component: () => import('@/views/FeedBack/FeedBack')
+    },
+    // 活动板块
+    {
+      path: '/activity',
+      name: 'Activity',
+      component: () => import('@/views/Activity/Activity'),
+    },
+    {
+      path: '/activity/detail/',
+      name: 'Detail',
+      component: () => import('@/views/Activity/Detail/Detail')
+    },
+    {
+      path: '/volsignup',
+      name: 'VolSignUp',
+      component: () => import('@/views/VolSignUp/VolSignUp')
+    },
+    // 权限申请 
+    {
+      path: '/permission',
+      name: 'Permission',
+      component: () => import('@/views/Mine/Permission/Permission')
+    },
+    // 后台管理
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import('@/views/Admin/index/index')
+    },
+    {
+      path: '/applypermission',
+      name: 'ApplyPermission',
+      component: () => import('@/views/Admin/UserAuthorizationPage/UserAuthorizationPage')
+    },
+    // 授权详情页
+    {
+      path: '/applypermissiondetail',
+      name: 'ApplyPermissionDetail',
+      component: () => import('@/views/Admin/UserAuthorizationPage/UserAuthorizationDetail/UserAuthorizationDetail')
+    }, {
+      path: '/borrowingInfopage',
+      name: 'BorrowingInfoPage',
+      component: () => import('@/views/Admin/BorrowingInfoPage/BorrowingInfoPage')
+    },
+    {
+      path: '/feedbackinfo',
+      name: 'FeedBackInfo',
+      component: () => import('@/views/Admin/FeedBackInfo/FeedBackInfo')
+    },
+    // 活动发布页
+    {
+      path: '/publishactivesDetail',
+      name: 'PublishActivesDetail',
+      component: () => import('@/views/Admin/PublishActives/PublishActivesDetail/PublishActivesDetail')
+    },
+    // 校园帮
+    {
+      path: '/help',
+      name: 'Help',
+      component: () => import('@/views/Help/Help')
     }
   ],
-  mode:'history'
+  mode: 'history'
 })
 
 export default router

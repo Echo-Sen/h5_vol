@@ -1,76 +1,85 @@
 <template>
-  <van-pull-refresh
-    style="min-height: 100vh"
-    v-model="isLoading"
-    success-text="刷新成功"
-    @refresh="onRefresh"
-  >
-    <van-list
-      :immediate-check="false"
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
+  <div class="container">
+    <van-pull-refresh
+      style="min-height: 100vh"
+      v-model="isLoading"
+      success-text="刷新成功"
+      @refresh="onRefresh"
     >
-      <div class="fixed-box" @click="UploadPost">
-        <van-icon color="#fff" size="40px" name="plus" />
-      </div>
-      <!-- 卡片开始 -->
-      <div class="card" v-for="item in data" :key="item.id">
-        <div class="card-header">
-          <div class="avatar">
-            <img :src="item.avatar" />
-          </div>
-          <div class="name">{{ item.username }}</div>
+      <van-list
+        :immediate-check="false"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div class="fixed-box" @click="UploadPost">
+          <van-icon color="#fff" size="40px" name="plus" />
         </div>
+        <!-- 卡片开始 -->
+        <div class="card" v-for="item in data" :key="item.id">
+          <div class="card-header">
+            <div class="avatar">
+              <img :src="item.avatar" />
+            </div>
+            <div class="name">{{ item.username }}</div>
+          </div>
 
-        <hr />
-        <div class="mid-container">
-          <div class="card-text">{{ item.context }}</div>
-          <!-- 单图 -->
-          <div v-if="item.images !== ''">
-            <van-image
-              v-for="(imgUrl, imgIndex) in item.images.split('|')"
-              :key="imgIndex"
-              width="10rem"
-              height="10rem"
-              fit="contain"
-              radius="10px"
-              :src="imgUrl"
-            >
-              <template v-slot:error
-                ><van-icon name="replay" />加载失败</template
+          <hr />
+          <div class="mid-container">
+            <div class="card-text">{{ item.context }}</div>
+            <!-- 单图 -->
+            <div v-if="item.images !== ''">
+              <van-image
+                v-for="(imgUrl, imgIndex) in item.images.split('|')"
+                :key="imgIndex"
+                @click="preview(item.images.split('|'), imgIndex)"
+                width="10rem"
+                height="10rem"
+                fit="contain"
+                radius="10px"
+                :src="imgUrl"
               >
-            </van-image>
+                <template v-slot:error
+                  ><van-icon name="replay" />加载失败</template
+                >
+              </van-image>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button
+              :ref="`likeDiv${item.id}`"
+              @click="clickLikes(item.id)"
+              style="display: flex; align-items: center"
+              class="like"
+            >
+              <van-icon name="like-o" size="25px" />
+              <span>{{ `点赞 (${item.likes})` }}</span>
+            </button>
+            <button style="display: flex; align-items: center" class="chat">
+              <van-icon name="comment-o" size="25px" />
+              <span>{{ `评论 (${item.comments})` }}</span>
+            </button>
+            <button style="display: flex; align-items: center" class="share">
+              <van-icon name="share-o" size="25px" /><span>{{
+                `分享 (${item.reposts})`
+              }}</span>
+            </button>
           </div>
         </div>
-        <div class="card-footer">
-          <button
-            :ref="`likeDiv${item.id}`"
-            @click="clickLikes(item.id)"
-            style="display: flex; align-items: center"
-            class="like"
-          >
-            <van-icon name="like-o" size="25px" />
-            <span>{{ `点赞 (${item.likes})` }}</span>
-          </button>
-          <button style="display: flex; align-items: center" class="chat">
-            <van-icon name="comment-o" size="25px" />
-            <span>{{ `评论 (${item.comments})` }}</span>
-          </button>
-          <button style="display: flex; align-items: center" class="share">
-            <van-icon name="share-o" size="25px" /><span>{{
-              `分享 (${item.reposts})`
-            }}</span>
-          </button>
-        </div>
-      </div>
-    </van-list>
-  </van-pull-refresh>
+      </van-list>
+    </van-pull-refresh>
+  </div>
 </template>
 
 <script>
-import { List, Image as VanImage, PullRefresh, ShareSheet } from 'vant'
+import {
+  List,
+  Image as VanImage,
+  PullRefresh,
+  ShareSheet,
+  ImagePreview,
+} from 'vant'
 import { getCommunityData } from '@/api/community'
 import { postLiked, postIsLike } from '@/api/community'
 export default {
@@ -96,6 +105,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [ShareSheet.name]: ShareSheet,
     [List.name]: List,
+    [ImagePreview.Component.name]: ImagePreview.Component,
   },
   mounted() {
     // 获取本地缓存的历史数据
@@ -254,6 +264,14 @@ export default {
         })
       }
     },
+    preview(arr, position) {
+      ImagePreview({
+        images: arr,
+        startPosition: position,
+        maxZoom: 3,
+        minZoom: 1 / 3,
+      })
+    },
   },
   // 深层数据更新强制渲染
   watch: {
@@ -268,9 +286,12 @@ export default {
 </script>
 
 <style>
+.container {
+  margin: 8px;
+}
 .card {
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr;
@@ -282,11 +303,12 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
+  /* background: linear-gradient(to bottom right, #f4f4f4, #eaeaea); */
 }
 
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 10px;
@@ -315,6 +337,9 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+.van-image {
+  margin-right: 5px;
 }
 
 .card-image .van-image {

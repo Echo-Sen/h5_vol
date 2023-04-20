@@ -7,11 +7,20 @@ import postcssPxToViewport from 'postcss-px-to-viewport';
 import '@/assets/css/base.css'
 // 组件库样式
 import 'vant/lib/index.css';
+// iconfont
+import '@/assets/iconfont/iconfont.css'
 // import './api/mock'
 // 引入路由
 import router from '@/router/index'
+// 引入工具
+import { isLogin } from "@/utils/Login";
+// backbar
+import Back from '@/components/Backbar.vue/Backbar'
 // 按需引入
-import { Tabbar, TabbarItem, Toast, Lazyload, Icon,Button,Uploader } from 'vant';
+import { Tabbar, TabbarItem, Toast, Lazyload, Icon, Button, Uploader } from 'vant';
+
+Vue.component('Back',Back)
+// 全局注册
 
 Vue.use(Uploader);
 Vue.use(Button)
@@ -24,7 +33,10 @@ Vue.use(Lazyload);
 // TabBar
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
-// 适配
+
+// 判断是否登录
+Vue.prototype.isLogin = isLogin
+// 移动端适配
 const postcssPlugins = [
   postcssPxToViewport({
     viewportWidth: 375,
@@ -40,8 +52,8 @@ const postcssPlugins = [
 Vue.prototype.$postcss = postcss(postcssPlugins);
 Vue.config.productionTip = false
 
-router.afterEach((to,from,next) => {
-  window.scrollTo(0,0);
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0);
 });
 
 

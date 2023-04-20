@@ -22,7 +22,7 @@
         class="card-img"
       />
       <div class="card-body">
-        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队</h2>
+        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队123456</h2>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
         class="card-img"
       />
       <div class="card-body">
-        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队</h2>
+        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队123456</h2>
       </div>
     </div>
     <!-- 卡片结束 -->
@@ -95,16 +95,16 @@ export default {
     Gird,
     [Divider.name]: Divider,
   },
-  mounted() {},
-  methods: {
-    
+  mounted() {
   },
+  methods: {},
 }
 </script>
 
 <style lang="less" scoped>
 .container {
   min-height: 110%;
+  padding: 5px;
 }
 .container .van-card {
   background-color: #dcdcdc;
@@ -113,7 +113,7 @@ export default {
 }
 
 .card {
-  width: 365px;
+  width: 350px;
   margin: 0 auto;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
@@ -123,14 +123,20 @@ export default {
   width: 100%;
   display: block;
   object-fit: cover;
-  height: 200px;
+  height: 150px;
 }
 .card-body {
   padding: 10px;
 }
 .card-title {
-  margin: 0;
+  width: 330px;
   font-size: 14px;
-  font-family: SimSun, '宋体', sans-serif;
+ font-family: KaiTi, STKaiti, "Microsoft YaHei", sans-serif;
+//  文字单行显示，多余用省略号代替
+  white-space: nowrap;// 禁止换行
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 20px;
+  line-height: 20px;
 }
 </style>

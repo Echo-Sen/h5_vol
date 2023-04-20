@@ -9,8 +9,10 @@ export const uploadImgData = (base64) => {
       method: 'POST',
       data: {
         image: base64
-      }
-    })
+      },
+      needToken:true
+    },
+  )
 }
 
 // 上传表单
@@ -18,7 +20,8 @@ export const uploadFormData = (option) => {
   return http({
     method: 'POST',
     url: '/auth/post/publish',
-    data: option
+    data: option,
+    needToken:true
   })
 }
 
@@ -28,7 +31,8 @@ export const updateFormData = (data) => {
     {
       method: 'POST',
       url: 'auth/post/update',
-      data: { data }
+      data: data,
+      needToken:true
     }
   )
 }

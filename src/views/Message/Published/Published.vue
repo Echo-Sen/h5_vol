@@ -1,13 +1,10 @@
 <template>
   <div>
-    <h1 class="title">
-      <van-icon name="arrow-left" @click="back" class="back" />
-      <span>我的帖子</span>
-    </h1>
+   <Back :title="'我的帖子'"/>
     <div class="card" v-for="item in data" :key="item.id">
       <div class="card-header">
         <div class="avatar">
-          <img :src="userInfo.avatar" />
+          <img :src="item.avatar" />
         </div>
         <!-- 删除 -->
         <div class="name">{{ item.username }}</div>
@@ -24,34 +21,35 @@
       <div class="mid-container">
         <div class="card-text">{{ item.context }}</div>
         <!-- 单图 -->
-        <div>
-          <van-image
-            width="10rem"
-            height="10rem"
-            fit="contain"
-            radius="10px"
-            src="https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg"
-          >
-            <template v-slot:error><van-icon name="replay" />加载失败</template>
-          </van-image>
-        </div>
+        <div class="img-container" v-if="item.images !== ''">
+            <van-image
+              v-for="(imgUrl, imgIndex) in item.images.split('|')"
+              :key="imgIndex"
+              @click="preview(item.images.split('|'), imgIndex)"
+              width="10rem"
+              height="10rem"
+              fit="contain"
+              radius="10px"
+              :src="imgUrl"
+            >
+              <template v-slot:error
+                ><van-icon name="replay" />加载失败</template
+              >
+            </van-image>
+          </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getCommunityData } from '@/api/community'
+import { getPersonData } from '@/api/community'
 import { Image as VanImage, PullRefresh, Toast, Dialog } from 'vant'
 import { deleteCard } from '@/api/community'
 export default {
   data() {
     return {
       data: [], // 装返回的全部数据
-      userInfo: {
-        avatar: '', // 头像
-        username: '',
-      },
       isLoading: false,
     }
   },
@@ -62,11 +60,11 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
   },
   mounted() {
-    // 暂时用来渲染头像
-    this.setInfo()
-    getCommunityData(this.getTime(), 10).then((res) => {
-      this.data = res.data.data
-      localStorage.setItem('communityData', JSON.stringify(res.data.data))
+    const time = this.getTime()
+    getPersonData(time, 10).then((res) => {
+       this.data = res.data.data
+      // localStorage.setItem('communityData', JSON.stringify(res.data.data))
+      console.log(res)
     })
   },
   methods: {
@@ -116,12 +114,6 @@ export default {
       let formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
       return formattedTime
     },
-    // 本地获取用户信息
-    setInfo() {
-      const resUserInfo = JSON.parse(window.localStorage.getItem('userinfo'))
-      this.userInfo.username = resUserInfo.username
-      this.userInfo.avatar = resUserInfo.avatar
-    },
     deleteCard(id) {
       Dialog.confirm({
         title: '警告',
@@ -143,11 +135,7 @@ export default {
     changeCard(id) {
       const userInfo = JSON.parse(localStorage.getItem('userinfo')).username
       // 跳转并传输
-      this.$router.push({path:'/message/update',query:{id}})
-    },
-    // 页面回退
-    back() {
-      this.$router.back()
+      this.$router.push({ path: '/message/update', query: { id } })
     },
   },
 }
@@ -169,20 +157,6 @@ export default {
   align-items: center;
   padding: 10px;
 }
-/* 标题 */
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-/* 标题居中 */
-.title span {
-  margin: 0 auto;
-}
-/* 回退 */
-.back {
-  align-self: center;
-}
 .avatar {
   width: 50px;
   height: 50px;
@@ -198,6 +172,9 @@ export default {
 .mid-container .card-text {
   font-size: 14px;
   font-family: SimSun, '宋体', sans-serif;
+}
+.img-container {
+  
 }
 .avatar img {
   width: 100%;
@@ -215,12 +192,11 @@ export default {
   align-items: center;
   overflow: hidden;
 }
-
-.card-image .van-image {
+.van-image{
+  margin-right: 5px;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  margin-right: 5px;
 }
 
 .fix {

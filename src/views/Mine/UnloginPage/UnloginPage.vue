@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="profile" @click="login">
-      <div class="profile__avatar"></div>
+      <div class="profile__avatar">
+        <van-icon
+          name=" icon-morentouxiang"
+          class-prefix="iconfont"
+          size="105"
+        />
+      </div>
       <div class="profile__name">点击登录</div>
     </div>
     <section>
@@ -48,18 +54,26 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /* 个人信息样式 */
 .profile {
   padding: 20px;
 }
 
 .profile__avatar {
+  position: relative;
   width: 80px;
   height: 80px;
   margin: 0 auto;
-  border-radius: 50%;
-  background-color: #ccc;
+}
+
+.iconfont {
+  position: absolute;
+  left: -5px;
+  top: -28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile__name {

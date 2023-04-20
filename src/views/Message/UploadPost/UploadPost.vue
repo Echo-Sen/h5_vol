@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h1 class="title">
-      <van-icon name="arrow-left" @click="back" class="back" />
-    </h1>
+    <Back />
     <form onsubmit="return false">
       <textarea
         v-model="uploadFormData.context"
@@ -27,12 +25,12 @@
         max-count="6"
         accept="image/*"
         preview-full-image
+        @delete="deleteImg($event, file)"
       />
       <van-button type="primary" @click="submitForm">发布</van-button>
     </form>
   </div>
 </template>
-
 <script>
 import { uploadImgData, uploadFormData } from '@/api/upload'
 import { Button, Toast, Uploader } from 'vant'
@@ -103,9 +101,9 @@ export default {
       file.status = 'uploading'
       file.message = '上传中...'
     },
-    // 页面回退
-    back() {
-      this.$router.back()
+
+    deleteImg(e, file) {
+      console.log(e, file)
     },
   },
 }
