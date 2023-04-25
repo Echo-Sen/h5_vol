@@ -8,7 +8,7 @@
         id=""
         cols="50"
         rows="10"
-        placeholder="请务必发布清晰照片，指明拾取或遗失位置"
+        placeholder="快来和大家交流志愿服务心得吧！"
       ></textarea>
       <!-- 
       after-read：回调
@@ -34,6 +34,7 @@
 <script>
 import { uploadImgData, uploadFormData } from '@/api/upload'
 import { Button, Toast, Uploader } from 'vant'
+const AhoCorasick = require('ahocorasick')
 export default {
   data() {
     return {
@@ -55,13 +56,13 @@ export default {
   methods: {
     // 提交表单
     async submitForm() {
-      if (this.disable) {
+      // 节流阀开启并且输入有字符
+      if (this.disable && this.uploadFormData.context) {
         const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         const imageStr = this.uploadFormData.images.join('|')
+        const str = this.sensitiveWordsFilter(this.uploadFormData.context)
         const option = {
-          user_id: userInfo.id,
-          username: userInfo.username,
-          context: this.uploadFormData.context,
+          context: str,
           images: imageStr,
         }
         uploadFormData(option)
@@ -100,6 +101,20 @@ export default {
         })
       file.status = 'uploading'
       file.message = '上传中...'
+    },
+
+    // 过滤敏感词 返回过滤后的字符
+    sensitiveWordsFilter(str) {
+      // 构建ac自动机
+      const sensitiveWord = ['sb', '操', '妈', '傻逼','笨蛋','nt','草']
+      let ac = new AhoCorasick(sensitiveWord)
+      // 敏感字替换
+      let results = ac.search(str)
+      const newChar = '*'
+      results.forEach((item) => {
+        str = str.substr(0, item[0]) + newChar + str.substr(item[0] + 1)
+      })
+      return str
     },
 
     deleteImg(e, file) {

@@ -1,6 +1,6 @@
 import router from '@/router';
 import axios from 'axios'
-import { Toast } from "vant";
+import { Toast, Notify } from "vant";
 import { isLogin } from './Login';
 
 const http = axios.create({
@@ -36,13 +36,19 @@ http.interceptors.request.use(function (config) {
 http.interceptors.response.use(function (response) {
   // 2xx 范围内的状态码都会触发该函数。
   // 对响应数据做点什么
+
+
   if (response.data.status === -1) {
     // 删除过期token 跳转登录页面
     localStorage.removeItem('userinfo')
-      localStorage.removeItem('token_expires_at');
-    router.replace({
-      path: '/my'
-    })
+    localStorage.removeItem('token_expires_at');
+    Notify("将在3秒后跳转到登录页")
+
+    setTimeout(() => {
+      router.replace({
+        path: '/my'
+      })
+    }, 3000);
   }
   return response;
 }, function (error) {

@@ -10,7 +10,7 @@ export const uploadImgData = (base64) => {
       data: {
         image: base64
       },
-      needToken:true
+      needToken: true
     },
   )
 }
@@ -21,7 +21,7 @@ export const uploadFormData = (option) => {
     method: 'POST',
     url: '/auth/post/publish',
     data: option,
-    needToken:true
+    needToken: true
   })
 }
 
@@ -32,7 +32,7 @@ export const updateFormData = (data) => {
       method: 'POST',
       url: 'auth/post/update',
       data: data,
-      needToken:true
+      needToken: true
     }
   )
 }

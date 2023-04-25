@@ -2,7 +2,7 @@
   <van-grid icon-size="40px" :column-num="3" clickable>
     <!-- icon前面要加一个空格才能显示图标 -->
     <van-grid-item
-      icon=" icon-datingqiuzhu"
+      icon=" icon-xiaoyuanzixun-01"
       icon-prefix="iconfont"
       text="校园帮"
       to="/help"
@@ -27,10 +27,10 @@
       to="/activity"
     />
     <van-grid-item
-      icon=" icon-ps"
+      icon=" icon-icon-quanxian"
       icon-prefix="iconfont"
-      text="pspr培训报名"
-      to="/"
+      text="权限申请"
+      to="/permission"
     />
     <van-grid-item
       icon="  icon-fankui"

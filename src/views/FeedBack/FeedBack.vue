@@ -69,8 +69,6 @@ export default {
             context: this.successMSg,
           }
           feedBackPost(option).then((res) => {
-            // 调用函数
-            console.log(res)
             if (res.data.status) {
               Toast.success({
                 message: '提交成功',

@@ -36,6 +36,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # 引入 mockjs
 
+# 引入 @zxing/library
+
+解决扫码问题
+
+# 引入 ahocorasick
+
+AC 算法
+
 ## 总结
 
 ```
@@ -151,4 +159,3 @@ export default {
 ## 为下拉刷新 增加节流阀
 
 ## 当前问题
-请求未携带token的返回值

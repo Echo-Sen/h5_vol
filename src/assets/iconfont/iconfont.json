@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14197447",
+      "name": "校园资讯-01",
+      "font_class": "xiaoyuanzixun-01",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
       "icon_id": "1348255",
       "name": "默认头像",
       "font_class": "morentouxiang",
@@ -39,13 +46,6 @@
       "font_class": "fankui",
       "unicode": "e61c",
       "unicode_decimal": 58908
-    },
-    {
-      "icon_id": "25163524",
-      "name": "打听求助",
-      "font_class": "datingqiuzhu",
-      "unicode": "fd44",
-      "unicode_decimal": 64836
     },
     {
       "icon_id": "8947208",

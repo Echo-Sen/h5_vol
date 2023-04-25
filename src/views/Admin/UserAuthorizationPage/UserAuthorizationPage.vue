@@ -14,7 +14,7 @@
           >
             <template #footer>
               <div class="time">申请时间：2023.4.18</div>
-              <div class="no-active">待处理</div>
+              <div class="active">已处理</div>
             </template>
           </van-card>
         </div>

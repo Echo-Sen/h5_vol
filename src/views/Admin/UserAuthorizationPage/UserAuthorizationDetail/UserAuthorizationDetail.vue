@@ -14,12 +14,12 @@
         </div>
         <div class="info">
           <div class="key">申请理由：</div>
-          <div class="value">赶紧给我超级管理员！</div>
+          <div class="value">我需要超级管理员权限发布活动</div>
         </div>
       </div>
       <div class="foot">
         <!-- 返回字段判断是否已处理 -->
-        <div class="active" v-if="!isDispose">
+        <div class="active" v-if="isDispose">
           <div style="margin: 16px">
             <van-button
               class="approve"

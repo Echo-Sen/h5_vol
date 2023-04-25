@@ -22,7 +22,9 @@
             thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
           >
             <template #footer>
-              <van-button size="normal" @click="Cancellation">取消报名</van-button>
+              <van-button size="normal" @click="Cancellation"
+                >取消报名</van-button
+              >
             </template>
           </van-card>
         </div>
@@ -77,8 +79,8 @@ export default {
       }
     },
     Cancellation() {
-      console.log('取消');
-    }
+      console.log('取消')
+    },
   },
   components: {
     [Empty.name]: Empty,
@@ -89,12 +91,12 @@ export default {
 }
 </script>
 
-<style scoped> 
+<style scoped>
 .container {
   margin-left: 10px;
   margin-right: 10px;
   min-height: 100px;
-  background-color: skyblue;
+  /* background-color: skyblue; */
 }
 .title-container {
   display: flex;
@@ -116,5 +118,19 @@ export default {
 .right-title {
   color: #000;
   font-size: 24px;
+}
+
+.van-card {
+  box-shadow: 0 0 3px rgba(0, -0.5, 0, 0.5);
+  margin: 5px;
+}
+.van-card__title {
+  font-size: 18px;
+  color: red;
+  line-height: 30px;
+}
+.van-card__desc {
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

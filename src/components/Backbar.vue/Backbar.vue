@@ -31,6 +31,12 @@ export default {
   methods: {
     // 页面回退
     back() {
+      const redirectPath = sessionStorage.getItem('redirectPathAfter')
+      if (redirectPath) {
+        this.$router.replace(redirectPath)
+        // 清除 redirectPath
+        sessionStorage.removeItem('redirectPathAfter')
+      }
       this.$router.back()
     },
   },

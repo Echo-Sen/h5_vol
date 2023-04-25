@@ -10,7 +10,52 @@
       <div class="right-title" ref="right_div" @click="rightClick">已逾期</div>
     </div>
     <!-- content -->
+    <div class="content" v-if="inDue && currentId === 1">
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>学号</th>
+            <th>借伞时间</th>
+            <th>还伞</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in inDue" :key="index">
+            <td>{{ item.name }}</td>
+            <td>{{ item.sex }}</td>
+            <td>{{ item.studentNum }}</td>
+            <td>{{ item.time }}</td>
+            <td>{{ item.return ? '已还' : '未还' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content" v-else-if="overDue.length && currentId === 2">
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>学号</th>
+            <th>借伞时间</th>
+            <th>逾期天数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in overDue" :key="index">
+            <td>{{ item.name }}</td>
+            <td>{{ item.sex }}</td>
+            <td>{{ item.studentNum }}</td>
+            <td>{{ item.time }}</td>
+            <td>{{ item.over }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <van-empty
+      v-else
       image="https://img01.yzcdn.cn/vant/custom-empty-image.png"
       description="暂无数据"
     />
@@ -18,17 +63,104 @@
 </template>
 
 <script>
-import { Empty } from "vant";
+import { Empty } from 'vant'
 export default {
   data() {
     return {
       currentId: 1,
-      progressData: [],
-      overData: [],
+      inDue: [
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 0,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          return: 0,
+        },
+      ],
+      // 逾期名单
+      overDue: [
+        {
+          name: '邓森',
+          sex: '女',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 1,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 0,
+        },
+        {
+          name: '邓森',
+          sex: '男',
+          studentNum: 2021413598,
+          time: '2023-4-20 20:12:05',
+          over: 0,
+        },
+      ],
     }
   },
-  components:{
-    [Empty.name]:Empty
+  components: {
+    [Empty.name]: Empty,
   },
   methods: {
     leftClick() {
@@ -82,5 +214,21 @@ export default {
 .right-title {
   color: #000;
   font-size: 24px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #000;
+  padding: 5px;
+  text-align: left;
+}
+.content {
+  padding: 10px;
+  border: 1px solid #ccc;
 }
 </style>

@@ -29,8 +29,8 @@
           >
         </li>
         <li>
-          <router-link class="a" to="/permission"
-            ><van-icon name="search" />权限申请</router-link
+          <router-link class="a" to="/admin"
+            ><van-icon name="setting-o" />后台管理</router-link
           >
         </li>
         <li>
@@ -38,11 +38,7 @@
             ><van-icon name="setting-o" />设置</router-link
           >
         </li>
-        <li>
-          <router-link class="a" to="/admin"
-            ><van-icon name="setting-o" />后台管理</router-link
-          >
-        </li>
+
         <li @click="logOut">
           <router-link class="a" to=""
             ><van-icon name="setting-o" />退出登录</router-link
@@ -69,6 +65,7 @@ export default {
     if (localStorage.getItem('userinfo')) {
       this.setInfo()
     }
+    this.handleLoginSuccess()
   },
   methods: {
     setInfo() {
@@ -82,6 +79,19 @@ export default {
       localStorage.removeItem('userinfo')
       localStorage.removeItem('token_expires_at')
       location.reload()
+    },
+    // 检测登录后是否有重定向链接
+    handleLoginSuccess() {
+      let redirectPath = sessionStorage.getItem('redirectPath')
+      if (redirectPath) {
+        // 清除 redirectPath
+        sessionStorage.removeItem('redirectPath')
+        // 跳转回之前的页面
+        sessionStorage.setItem('redirectPathAfter', this.$route.fullPath)
+        this.$router.replace(redirectPath)
+      } else {
+        return
+      }
     },
   },
 }

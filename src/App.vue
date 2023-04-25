@@ -3,11 +3,11 @@
     <router-view />
     <!-- 对于除开以下三个页面外均要隐藏tabbar -->
     <div
-      v-if="['/', '/home', '/my', '/message'].includes($route.path)"
+      v-if="['/', '/home', '/my', '/message', '/chatgpt'].includes($route.path)"
       style="height: 5rem"
     ></div>
     <van-tabbar
-      v-if="['/', '/home', '/my', '/message'].includes($route.path)"
+      v-if="['/', '/home', '/my', '/message', '/chatgpt'].includes($route.path)"
       route
       v-model="active"
       active-color="#ee0a24"
@@ -15,7 +15,10 @@
     >
       <van-tabbar-item icon="home-o" replace to="/home">首页</van-tabbar-item>
       <van-tabbar-item icon="newspaper-o" replace to="/message"
-        >失物招领</van-tabbar-item
+        >志愿服务社区</van-tabbar-item
+      >
+      <van-tabbar-item icon="newspaper-o" replace to="/chatgpt"
+        >服务机器人</van-tabbar-item
       >
       <van-tabbar-item icon="user-o" replace to="/my">我的</van-tabbar-item>
     </van-tabbar>

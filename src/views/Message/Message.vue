@@ -23,6 +23,9 @@
               <img :src="item.avatar" />
             </div>
             <div class="name">{{ item.username }}</div>
+            <div class="time">
+              {{ item.updated_at | transformTime(item.updated_at) }}
+            </div>
           </div>
 
           <hr />
@@ -56,7 +59,11 @@
               <van-icon name="like-o" size="25px" />
               <span>{{ `点赞 (${item.likes})` }}</span>
             </button>
-            <button style="display: flex; align-items: center" class="chat">
+            <button
+              style="display: flex; align-items: center"
+              class="chat"
+              @click="goComments(item.id)"
+            >
               <van-icon name="comment-o" size="25px" />
               <span>{{ `评论 (${item.comments})` }}</span>
             </button>
@@ -97,6 +104,7 @@ export default {
       liked: false, // 是否点赞
       throttle: false, // 下拉刷新的节流阀
       isCurrent: '', //判断是否是当前id
+      commentsData: [], // 全部评论数据
     }
   },
 
@@ -234,7 +242,6 @@ export default {
             })
           }),
         ]
-        console.log(this.data)
         this.loading = true
         // 如果返回数据为空则设置已完成
         this.finished = true
@@ -264,6 +271,7 @@ export default {
         })
       }
     },
+    // 图片缩放比例
     preview(arr, position) {
       ImagePreview({
         images: arr,
@@ -271,6 +279,11 @@ export default {
         maxZoom: 3,
         minZoom: 1 / 3,
       })
+    },
+
+    // 评论点击
+    goComments(id) {
+      this.$router.push({ path: '/comment', query: { id } })
     },
   },
   // 深层数据更新强制渲染
@@ -282,10 +295,18 @@ export default {
       }
     },
   },
+  filters: {
+    transformTime(isoString) {
+      // 数据中的更新时间转换
+      const date = new Date(isoString)
+      const transformTime = date.toLocaleString()
+      return transformTime
+    },
+  },
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 8px;
 }
@@ -297,11 +318,13 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   margin-bottom: 15px;
+  position: relative;
 }
 
 .card-header {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  line-height: 20px;
   padding: 10px;
   /* background: linear-gradient(to bottom right, #f4f4f4, #eaeaea); */
 }
@@ -386,5 +409,11 @@ export default {
 /* 爱心变红 */
 .liked {
   color: red;
+}
+.time {
+  font-size: 10x;
+  position: absolute;
+  top: 35px;
+  left: 60px;
 }
 </style>

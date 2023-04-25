@@ -19,6 +19,7 @@
         <van-grid-item
           icon-prefix="iconfont"
           icon=" icon-icon_xinyong_xianxing_jijin-207"
+          to="/activitieslist"
           text="活动报名"
         />
         <van-grid-item
@@ -36,8 +37,8 @@
         <van-grid-item
           icon-prefix="iconfont"
           to="/borrowingInfopage"
-          icon=" icon-ps"
-          text="PSPR报名"
+          icon=" icon-xiaoyuanzixun-01"
+          text="校园帮"
         />
         <van-grid-item
           icon-prefix="iconfont"
@@ -77,7 +78,6 @@ export default {
   position: absolute;
   height: 200px;
   width: 100%;
-  background-color: red;
 }
 .header-img {
   width: 100%;

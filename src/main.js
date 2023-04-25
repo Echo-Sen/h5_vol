@@ -53,6 +53,10 @@ Vue.prototype.$postcss = postcss(postcssPlugins);
 Vue.config.productionTip = false
 
 router.afterEach((to, from, next) => {
+  if (to.name === 'ChatGpt') {
+    return
+  }
+  
   window.scrollTo(0, 0);
 });
 

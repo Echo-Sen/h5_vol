@@ -3,7 +3,7 @@
     <Back />
     <div class="top"></div>
     <div class="bottom">
-      <div class="software">
+      <div class="software" @click="goSoftware">
         <div class="software-title">
           <h1>软件帮</h1>
           <span>校园互助，点我求助</span>
@@ -12,14 +12,14 @@
       </div>
       <div class="bottom-three">
         <div class="left">
-          <div class="idle">
+          <div class="idle" @click="goIdle">
             <img src="@/assets/images/杂物的快递箱.png" alt="" />
             <div class="idle-title">
               <h1>我的闲置</h1>
               <span>闲置出售、捐赠</span>
             </div>
           </div>
-          <div class="expressage">
+          <div class="expressage" @click="goExpressage">
             <img src="@/assets/images/配送快递服务.png" alt="" />
             <div class="expressage-title">
               <h1>我的快递</h1>
@@ -27,10 +27,10 @@
           </div>
         </div>
         <div class="right">
-          <div class="helping">
+          <div class="helping" @click="goHelping">
             <img src="@/assets/images/信息反馈.png" alt="" />
             <div class="helping-title">
-              <h1>我的互助</h1>
+              <h1>互助社区</h1>
             </div>
           </div>
         </div>
@@ -40,7 +40,26 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    goSoftware() {
+      this.$router.push({ path: '/software' })
+      console.log('软件帮')
+    },
+    goIdle() {
+      this.$router.push({ path: '/idle' })
+      console.log('我的闲置')
+    },
+    goExpressage() {
+      this.$router.push({ path: '/expressage' })
+      console.log('我的快递')
+    },
+    goHelping() {
+      this.$router.push({ path: '/helping' })
+      console.log('我的互助')
+    },
+  },
+}
 </script>
 
 <style scoped>

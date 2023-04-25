@@ -6,7 +6,7 @@ export const getCommunityData = (time, limit) => {
   return http({
     url: `/post/getposts?created_at=${time}&limit=${limit}`,
     method: 'GET',
-    needToken:false
+    needToken: false
   })
 }
 
@@ -15,7 +15,7 @@ export const getPersonData = (time, limit) => {
   return http({
     method: "GET",
     url: `/auth/post/myposts?created_at=${time}&limit=${limit}`,
-    needToken:true
+    needToken: true
   })
 }
 // 上传点赞情况
@@ -24,7 +24,7 @@ export const postLiked = (id) => {
     method: 'POST',
     url: '/auth/post/like',
     data: { post_id: id },
-    needToken:true
+    needToken: true
   })
 }
 //  是否点赞
@@ -33,7 +33,26 @@ export const postIsLike = (id) => {
     method: 'POST',
     url: "/auth/post/islike",
     data: { post_id: id },
-    needToken:true
+    needToken: true
+  })
+}
+// 发表评论
+export const POstCommentsData = (option) => {
+  return http({
+    method: 'POST',
+    url: 'auth/post/cmt',
+    data:option,
+    needToken: true
+  })
+}
+
+// 获取评论数据
+export const GetCommentsData = (id) => {
+  return http({
+    method: 'POST',
+    url: 'auth/post/getcmts',
+    data: { post_id: id },
+    needToken: true
   })
 }
 
@@ -43,6 +62,6 @@ export const deleteCard = (id) => {
     method: 'POST',
     url: '/auth/post/delete',
     data: { post_id: id },
-    needToken:true
+    needToken: true
   })
 }
