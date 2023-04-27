@@ -1,7 +1,6 @@
 <template>
   <!-- 登录状态 -->
   <div>
-    <router-view></router-view>
     <header>
       <img :src="userInfo.avatar" alt="头像" />
       <h1>{{ userInfo.name }}</h1>

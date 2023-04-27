@@ -5,7 +5,6 @@ import { isLogin } from './Login';
 
 const http = axios.create({
   // 通用地址
-  // baseURL: '/api',
   baseURL: 'http://47.115.227.77:7001/api',
   // 超时时间
   timeout: 10000

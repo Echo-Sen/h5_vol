@@ -25,3 +25,12 @@ export const SignUp = (id) => {
     needToken: true
   })
 }
+// 取消报名
+export const cancelSignUp = (id) => {
+  return http({
+    method: 'POST',
+    url: 'auth/act/register',
+    data: { act_id },
+    needToken: true
+  })
+}

@@ -69,17 +69,18 @@
           <div class="time">
             {{ item.updated_at | transformTime(item.updated_at) }}
           </div>
+          <button @click="replay(item.id)" class="replay">回复</button>
         </div>
         <div class="comment-context">{{ item.context }}</div>
       </div>
-      <div style="height: 10rem"></div>
+      <div style="height: 8rem"></div>
       <div class="chat_foot">
         <!-- context -->
-        <van-sticky :offset-top="50">
+        <van-sticky :offset-top="60">
           <textarea
             class="chat_context"
             id="chat_context_item"
-            cols="30"
+            cols="20"
             rows="10"
             v-model="context"
             placeholder="输入你想评论的内容"
@@ -148,6 +149,7 @@ export default {
     })
   },
   methods: {
+    // 评论发送
     commit() {
       const option = {
         post_id: this.id,
@@ -188,6 +190,7 @@ export default {
         }
       })
     },
+    // 点赞
     async clickLikes() {
       // 获取icon
       const likeIcon = this.$refs['likeDiv' + this.id][0].children[0]
@@ -209,6 +212,15 @@ export default {
           }
         })
       }
+    },
+    replay(id) {
+      const input = this.$refs.input
+      // 将光标置于输入框中
+      input.focus()
+      // 打开键盘
+      input.select()
+
+      
     },
   },
   filters: {
@@ -324,6 +336,12 @@ export default {
   top: 35px;
   left: 60px;
 }
+/* 回复 */
+.replay {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
 
 /* 评论区域 */
 .title-container {
@@ -359,7 +377,7 @@ export default {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   position: fixed;
-  bottom: 10px;
+  bottom: 0px;
 }
 .chat_context {
   width: 100%;

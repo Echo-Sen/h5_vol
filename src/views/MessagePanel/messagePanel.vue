@@ -142,7 +142,6 @@ export default {
     },
     // 触底
     pullBottom() {
-      const myElement = this.$refs.myElement
       this.$nextTick(() => {
         const myElement = this.$refs.myElement
         const height = this.$refs.myElement.scrollHeight
@@ -159,15 +158,14 @@ export default {
       const params = {
         model: 'gpt-3.5-turbo',
         messages: this.botMessage.slice(-3),
-        max_tokens: 3000,
+        max_tokens: 500,
         temperature: 0.5,
       }
-      console.log(params)
       const LocalOptions = {
         headers: {
           'Content-Type': 'application/json',
           Authorization:
-            'Bearer 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',
+            'Bearer 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',
         },
         httpsAgent: agent, // 如果代理协议是https，则需要使用httpsAgent
         timeout: 1000 * 30, // 超时时间
@@ -182,7 +180,6 @@ export default {
               content: res.data.choices[0].message.content,
             }
             this.botMessage.push(obj)
-
             localStorage.setItem('chatbot', JSON.stringify(this.botMessage))
             let now = new Date()
             const hours = now.getHours().toString().padStart(2, '0') // 获取小时并补零

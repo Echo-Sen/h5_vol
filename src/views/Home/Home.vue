@@ -22,7 +22,9 @@
         class="card-img"
       />
       <div class="card-body">
-        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队123456</h2>
+        <h2 class="card-title">
+          人工智能学院“小红帽”常青藤青年志愿者服务队123456
+        </h2>
       </div>
     </div>
 
@@ -50,24 +52,18 @@
     </div>
     <van-divider>发布时间：2023-04-02</van-divider>
     <div class="card">
-      <img
-        src="https://picsum.photos/500/300"
-        alt="Card Image"
-        class="card-img"
-      />
+      <img src="https://picsum.photos/500/300" class="card-img" />
       <div class="card-body">
         <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队</h2>
       </div>
     </div>
     <van-divider>发布时间：2023-04-02</van-divider>
     <div class="card">
-      <img
-        src="https://picsum.photos/500/300"
-        alt="Card Image"
-        class="card-img"
-      />
+      <img src="https://picsum.photos/500/300" class="card-img" />
       <div class="card-body">
-        <h2 class="card-title">人工智能学院“小红帽”常青藤青年志愿者服务队123456</h2>
+        <h2 class="card-title">
+          人工智能学院“小红帽”常青藤青年志愿者服务队123456
+        </h2>
       </div>
     </div>
     <!-- 卡片结束 -->
@@ -95,8 +91,7 @@ export default {
     Gird,
     [Divider.name]: Divider,
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {},
 }
 </script>
@@ -131,9 +126,9 @@ export default {
 .card-title {
   width: 330px;
   font-size: 14px;
- font-family: KaiTi, STKaiti, "Microsoft YaHei", sans-serif;
-//  文字单行显示，多余用省略号代替
-  white-space: nowrap;// 禁止换行
+  font-family: KaiTi, STKaiti, 'Microsoft YaHei', sans-serif;
+  //  文字单行显示，多余用省略号代替
+  white-space: nowrap; // 禁止换行
   overflow: hidden;
   text-overflow: ellipsis;
   height: 20px;

@@ -81,7 +81,11 @@ export default {
             Toast.fail('请求错误')
           })
       } else {
-        Toast.fail('请勿反复提交')
+        if (!this.disable) {
+          Toast.fail('请勿反复提交')
+        } else{
+          Toast.fail('请先输入')
+        }
       }
     },
 
@@ -106,7 +110,7 @@ export default {
     // 过滤敏感词 返回过滤后的字符
     sensitiveWordsFilter(str) {
       // 构建ac自动机
-      const sensitiveWord = ['sb', '操', '妈', '傻逼','笨蛋','nt','草']
+      const sensitiveWord = ['sb', '操', '妈', '傻逼', '笨蛋', 'nt', '草']
       let ac = new AhoCorasick(sensitiveWord)
       // 敏感字替换
       let results = ac.search(str)
