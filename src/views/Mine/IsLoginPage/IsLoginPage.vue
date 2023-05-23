@@ -4,6 +4,7 @@
     <header>
       <img :src="userInfo.avatar" alt="头像" />
       <h1>{{ userInfo.name }}</h1>
+      <span>{{ `(${Permission})` }}</span>
     </header>
     <section>
       <ul>
@@ -27,7 +28,7 @@
             ><van-icon name="guide-o" />使用指南</router-link
           >
         </li>
-        <li>
+        <li v-if="allowShow">
           <router-link class="a" to="/admin"
             ><van-icon name="setting-o" />后台管理</router-link
           >
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import { getCurrentPermission } from '@/api/premission'
 export default {
   data() {
     return {
@@ -58,13 +60,35 @@ export default {
         gender: '', //性别 男：0，女：1
         avatar: '', // 头像
       },
+      currentPermission: '',
     }
   },
   mounted() {
     if (localStorage.getItem('userinfo')) {
       this.setInfo()
     }
+    this.ConfirmCurrentPermission()
     this.handleLoginSuccess()
+  },
+  computed: {
+    Permission() {
+      if (this.currentPermission === 1) {
+        return '超级管理员'
+      } else if (this.currentPermission === 2) {
+        return '管理员'
+      } else {
+        return '用户'
+      }
+    },
+    allowShow() {
+      if (this.currentPermission === 1) {
+        return true
+      } else if (this.currentPermission === 2) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
   methods: {
     setInfo() {
@@ -92,6 +116,13 @@ export default {
         return
       }
     },
+    ConfirmCurrentPermission() {
+      getCurrentPermission().then((res) => {
+        if (res.data.status === 1) {
+          this.currentPermission = res.data.authority
+        }
+      })
+    },
   },
 }
 </script>
@@ -116,7 +147,9 @@ header h1 {
   font-weight: bold;
   color: #333;
 }
-
+header span {
+  font-size: 18px;
+}
 /* 设置主体样式 */
 section {
   margin-top: 20px;

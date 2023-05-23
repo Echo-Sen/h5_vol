@@ -36,15 +36,16 @@
         />
         <van-grid-item
           icon-prefix="iconfont"
-          to="/borrowingInfopage"
+          to="/alluserinfo"
           icon=" icon-xiaoyuanzixun-01"
-          text="校园帮"
+          text="用户信息"
         />
+
         <van-grid-item
           icon-prefix="iconfont"
-          to="/publishactivesDetail"
+          to="/activiesmanage"
           icon=" icon-fabu-"
-          text="活动发布"
+          text="活动管理"
         />
       </van-grid>
     </div>

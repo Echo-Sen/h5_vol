@@ -3,40 +3,24 @@
     <div class="container">
       <Back :title="'权限审批'" />
       <!-- 1 -->
-      <div @click="goDetail">
-        <div v-if="list.length == 0">
-          <!-- 懒加载、垂直居中、 -->
-          <van-card
-            lazy-load
-            centered
-            desc="我需要申请部长权限"
-            title="部长权限申请"
-          >
-            <template #footer>
-              <div class="time">申请时间：2023.4.18</div>
-              <div class="active">已处理</div>
-            </template>
-          </van-card>
-        </div>
-        <van-empty
-          v-else
-          image="https://img01.yzcdn.cn/vant/custom-empty-image.png"
-          description="暂无数据"
-        />
-      </div>
-      <!-- 2 -->
       <div>
-        <div v-if="list.length == 0">
+        <div v-if="list">
           <!-- 懒加载、垂直居中、 -->
           <van-card
+            v-for="item in list"
+            :key="item.id"
             lazy-load
             centered
-            desc="我需要申请部长权限"
-            title="部长权限申请"
+            @click="goDetail(item.user_id)"
+            :desc="item.reason"
+            :title="`${item.role === 1 ? '超级管理员' : '管理员'}权限申请`"
           >
             <template #footer>
-              <div class="time">申请时间：2023.4.18</div>
-              <div class="no-active">待处理</div>
+              <div class="time">
+                申请时间：{{ item.created_at | transformTime(item.created_at) }}
+              </div>
+              <div class="no-active" v-if="item.status === 0">待处理</div>
+              <div class="active" v-else>已处理</div>
             </template>
           </van-card>
         </div>
@@ -52,10 +36,11 @@
 
 <script>
 import { Empty, Card, Tag, Lazyload } from 'vant'
+import { getPermissionList } from '@/api/admin'
 export default {
   data() {
     return {
-      list: [],
+      list: undefined,
     }
   },
   components: {
@@ -64,10 +49,26 @@ export default {
     [Tag.name]: Tag,
     [Lazyload.name]: Lazyload,
   },
+  mounted() {
+    this.getList()
+  },
   methods: {
-    goDetail() {
+    goDetail(id) {
       // 拿到Id传入
-      this.$router.push('/applypermissiondetail')
+      this.$router.push({ path: '/applypermissiondetail', query: { id } })
+    },
+    getList() {
+      getPermissionList().then((res) => {
+        this.list = res.data.data
+      })
+    },
+  },
+  filters: {
+    transformTime(isoString) {
+      // 数据中的更新时间转换
+      const date = new Date(isoString)
+      const transformTime = date.toLocaleString()
+      return transformTime
     },
   },
 }

@@ -16,7 +16,7 @@ export const isSignUp = (id) => {
     needToken: true
   })
 }
-// 报名
+// 报名和取消报名
 export const SignUp = (id) => {
   return http({
     method: 'POST',
@@ -25,12 +25,12 @@ export const SignUp = (id) => {
     needToken: true
   })
 }
-// 取消报名
-export const cancelSignUp = (id) => {
+// 个人报名全部记录
+export const getSignUpData = () => {
   return http({
     method: 'POST',
-    url: 'auth/act/register',
-    data: { act_id },
+    url: 'auth/act/myregs',
     needToken: true
   })
 }
+

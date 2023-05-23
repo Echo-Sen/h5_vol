@@ -57,7 +57,7 @@
               class="like"
             >
               <van-icon name="like-o" size="25px" />
-              <span>{{ `点赞 (${item.likes})` }}</span>
+              <span>{{ ` ${item.likes}` }}</span>
             </button>
             <button
               style="display: flex; align-items: center"
@@ -65,11 +65,11 @@
               @click="goComments(item.id)"
             >
               <van-icon name="comment-o" size="25px" />
-              <span>{{ `评论 (${item.comments})` }}</span>
+              <span>{{ ` ${item.comments}` }}</span>
             </button>
             <button style="display: flex; align-items: center" class="share">
               <van-icon name="share-o" size="25px" /><span>{{
-                `分享 (${item.reposts})`
+                ` ${item.reposts}`
               }}</span>
             </button>
           </div>
@@ -146,15 +146,14 @@ export default {
   },
   methods: {
     // 转换时间格式
-    transformTime() {
+    transformTime(isoString) {
       // 数据中的更新时间转换
-      const isoString = '2023-04-08T09:34:35.000Z'
       const date = new Date(isoString)
 
       const year = date.getFullYear()
       const month = String(date.getMonth() + 1).padStart(2, '0')
       const day = String(date.getDate()).padStart(2, '0')
-      const hour = String(date.getHours() + 8).padStart(2, '0') // 加上 8 小时得到东八区时间
+      const hour = String(date.getHours()).padStart(2, '0')
       const minute = String(date.getMinutes()).padStart(2, '0')
       const second = String(date.getSeconds()).padStart(2, '0')
 
@@ -199,6 +198,11 @@ export default {
     UploadPost() {
       this.$router.push('/uploadpost')
     },
+    // 合并不同ID的数组对象
+    mergeObjectsByDifferentId(arr1, arr2) {
+      const mergedSet = new Set([...arr1, ...arr2])
+      return Array.from(mergedSet)
+    },
     // 下拉刷新的回调
     async onRefresh() {
       if (!this.throttle) {
@@ -228,24 +232,22 @@ export default {
     },
     // 触底回调
     onLoad() {
+      this.loading = true
       // 获取每条消息的最早时间
       const time = this.transformTime(
         this.data[this.data.length - 1].created_at
       )
       getCommunityData(time, 10).then((res) => {
         // 追加过滤相同id的数组对象
-        this.data = [
-          ...this.data,
-          ...res.data.data.filter((item) => {
-            !this.data.some((i) => {
-              i.id === item.id
-            })
-          }),
-        ]
-        this.loading = true
-        // 如果返回数据为空则设置已完成
-        this.finished = true
+        this.data = this.mergeObjectsByDifferentId(this.data, res.data.data)
+        localStorage.setItem('communityData', JSON.stringify(this.data))
+        this.loading = false
+        if (res.data.data.length === 0) {
+          // 如果返回数据为空则设置已完成
+          this.finished = true
+        }
       })
+
       // this.finished = true
     },
     // 点赞
@@ -290,11 +292,12 @@ export default {
   watch: {
     data() {
       if (!this.isFirstLoad) {
-        // 因为深度的问题，数组里面的数组变化可能不会自动更新需要强制渲染
+        // 因为深度的问题，数组中的数组变化可能不会自动更新需要强制渲染
         this.$forceUpdate()
       }
     },
   },
+  // 过滤器
   filters: {
     transformTime(isoString) {
       // 数据中的更新时间转换

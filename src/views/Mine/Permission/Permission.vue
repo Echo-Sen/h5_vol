@@ -16,7 +16,7 @@
       <van-popup v-model="showPicker" round position="bottom">
         <van-picker
           title="权限组"
- show-toolbar
+          show-toolbar
           :columns="columns"
           @confirm="onConfirm"
           @cancel="onCancel"
@@ -46,13 +46,14 @@
 
 <script>
 import { Form, Field, Popup, Area, Picker, Toast } from 'vant'
+import { ApplyPermission } from '@/api/premission'
 export default {
   data() {
     return {
       value: '',
       showPicker: false,
       message: '',
-      columns: ['超级管理员', '队长', '部长', '干事'],
+      columns: ['超级管理员', '管理员'],
     }
   },
   components: {
@@ -69,17 +70,33 @@ export default {
       this.value = value
       this.showPicker = false
     },
-    
+
     onCancel() {
       Toast('取消')
       this.showPicker = false
     },
     onSubmit() {
-      const option = {
-        message:this.message,
-        value:this.value
+      if (this.value == '超级管理员') {
+        ApplyPermission(1, this.message).then((res) => {
+          if (res.data.status === 1) {
+            Toast.success(res.data.msg)
+            this.message = ''
+            this.value = ''
+          } else {
+            Toast.fail(res.data.msg)
+          }
+        })
+      } else if (this.value == '管理员') {
+        ApplyPermission(2, this.message).then((res) => {
+          if (res.data.status === 1) {
+            Toast.success(res.data.msg)
+            this.message = ''
+            this.value = ''
+          } else {
+            Toast.fail(res.data.msg)
+          }
+        })
       }
-      console.log(option);
     },
   },
 }

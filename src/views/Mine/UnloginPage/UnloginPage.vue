@@ -57,27 +57,28 @@ export default {
 <style scoped>
 /* 个人信息样式 */
 .profile {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 120px; /* 可以根据实际情况调整高度 */
 }
 
 .profile__avatar {
-  position: relative;
   width: 80px;
   height: 80px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin-top: 5%;
 }
 
 .iconfont {
-  position: absolute;
-  left: -5px;
-  top: -28px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .profile__name {
-  margin-top: 10px;
+  margin-top: 10%;
   font-size: 18px;
   text-align: center;
   color: #666;

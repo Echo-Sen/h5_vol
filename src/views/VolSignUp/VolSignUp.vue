@@ -15,14 +15,16 @@
         <div v-if="progressData">
           <!-- 懒加载、垂直居中、 -->
           <van-card
+            v-for="item in progressData"
+            :key="item.id"
             lazy-load
             centered
-            desc="描述信息啦啦啦啦啦啦啦啦啦"
-            title="活动标题"
-            thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
+            :desc="item.detail"
+            :title="item.title"
+            :thumb="item.img"
           >
             <template #footer>
-              <van-button size="normal" @click="Cancellation"
+              <van-button size="normal" @click="Cancellation(item.id)"
                 >取消报名</van-button
               >
             </template>
@@ -35,7 +37,7 @@
         />
       </div>
       <div class="right-content" v-else>
-        <div v-if="overData.length">12346</div>
+        <div v-if="overData">12346</div>
         <van-empty
           v-else
           image="https://img01.yzcdn.cn/vant/custom-empty-image.png"
@@ -47,15 +49,18 @@
 </template>
 
 <script>
-import { Empty, Card, Tag, Lazyload } from 'vant'
-
+import { Empty, Card, Tag, Lazyload, Dialog, Toast } from 'vant'
+import { getSignUpData, SignUp } from '@/api/activity'
 export default {
   data() {
     return {
       currentId: 1,
-      progressData: [],
-      overData: [],
+      progressData: undefined,
+      overData: undefined,
     }
+  },
+  mounted() {
+    this.AllSignData()
   },
   methods: {
     leftClick() {
@@ -78,8 +83,31 @@ export default {
         this.currentId = 2
       }
     },
-    Cancellation() {
-      console.log('取消')
+    // 全部报名信息
+    AllSignData() {
+      getSignUpData().then((res) => {
+        this.progressData = res.data.data
+      })
+    },
+    // 取消报名
+    Cancellation(id) {
+      Dialog.confirm({
+        title: '警告',
+        message: '您确定要取消报名',
+      })
+        .then(() => {
+          SignUp(id).then((res) => {
+            if (res.data.status == 2) {
+              Toast.success(res.data.msg)
+              location.reload()
+            } else {
+              Toast.fail(res.data.msg)
+              location.reload()
+            }
+          })
+        })
+        .catch(() => {
+        })
     },
   },
   components: {

@@ -1,4 +1,5 @@
 <template>
+<!-- chatGPT -->
   <div class="chat_commento">
     <!-- top -->
     <div class="chat_top">
@@ -165,7 +166,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           Authorization:
-            'Bearer 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',
+            'Bearer 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',
         },
         httpsAgent: agent, // 如果代理协议是https，则需要使用httpsAgent
         timeout: 1000 * 30, // 超时时间

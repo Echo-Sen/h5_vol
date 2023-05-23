@@ -40,7 +40,7 @@
           class="like"
         >
           <van-icon name="like-o" size="25px" />
-          <span>{{ `点赞 (${item.likes})` }}</span>
+          <span>{{ ` ${item.likes}` }}</span>
         </button>
         <button
           style="display: flex; align-items: center"
@@ -48,11 +48,11 @@
           @click="goComments(item.id)"
         >
           <van-icon name="comment-o" size="25px" />
-          <span>{{ `评论 (${item.comments})` }}</span>
+          <span>{{ ` ${item.comments}` }}</span>
         </button>
         <button style="display: flex; align-items: center" class="share">
           <van-icon name="share-o" size="25px" /><span>{{
-            `分享 (${item.reposts})`
+            ` ${item.reposts}`
           }}</span>
         </button>
       </div>
@@ -349,6 +349,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #F2F2F2;
 }
 .title {
   font-size: 20px;
@@ -360,11 +361,12 @@ export default {
   border-radius: 10px;
 }
 .comment-card {
+  padding: 10px;
   min-height: 100px;
   width: 100%;
   border-radius: 10px;
   /* background-color: red; */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); */
   margin-top: 10px;
   background-color: #fff;
 }

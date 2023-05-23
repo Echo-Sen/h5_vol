@@ -6,20 +6,22 @@
       <div class="item">
         <div class="info">
           <div class="key">申请人：</div>
-          <div class="value">邓森</div>
+          <div class="value">{{ list.name }}</div>
         </div>
         <div class="info">
           <div class="key">申请权限：</div>
-          <div class="value">超级管理员</div>
+          <div class="value">
+            {{ list.role === 1 ? '超级管理员' : '管理员' }}
+          </div>
         </div>
         <div class="info">
           <div class="key">申请理由：</div>
-          <div class="value">我需要超级管理员权限发布活动</div>
+          <div class="value">{{ list.reason }}</div>
         </div>
       </div>
       <div class="foot">
         <!-- 返回字段判断是否已处理 -->
-        <div class="active" v-if="isDispose">
+        <div class="active" v-if="list.status === 0">
           <div style="margin: 16px">
             <van-button
               class="approve"
@@ -27,6 +29,7 @@
               block
               type="info"
               native-type="submit"
+              @click="Agree(list.user_id, 1)"
               >同意</van-button
             >
           </div>
@@ -37,13 +40,14 @@
               block
               type="info"
               native-type="submit"
+              @click="Refuse(list.user_id, 2)"
               >拒绝</van-button
             >
           </div>
         </div>
         <!-- 处理直接显示结果 -->
         <div class="result" v-else>
-          <div class="result_approve" v-if="true">已同意</div>
+          <div class="result_approve" v-if="list.status === 1">已同意</div>
           <div class="result_cancel" v-else>已拒绝</div>
         </div>
       </div>
@@ -57,17 +61,55 @@
 </template>
 
 <script>
-import { Empty, Button } from 'vant'
+import { getPermissionList, dealApplyPermission } from '@/api/admin'
+import { Empty, Button, Toast } from 'vant'
 export default {
   data() {
     return {
-      list: [{}],
-      isDispose: true, //是否已处理申请
+      list: [],
     }
   },
   components: {
     [Empty.name]: Empty,
     [Button.name]: Button,
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    // 回去详细信息
+    getList() {
+      getPermissionList().then((res) => {
+        res.data.data.forEach((item) => {
+          if (item.user_id == this.$route.query.id) {
+            this.list = item
+            return
+          }
+        })
+      })
+    },
+    // 同意
+    Agree(user_id, agree) {
+      dealApplyPermission(user_id, agree).then((res) => {
+        if (res.data.status === 1) {
+          Toast.success(res.data.msg)
+        } else {
+          Toast.fail(res.data.msg)
+        }
+        location.reload()
+      })
+    },
+    // 拒绝
+    Refuse(user_id, refuse) {
+      dealApplyPermission(user_id, refuse).then((res) => {
+        if (res.data.status === 1) {
+          Toast.success(res.data.msg)
+        } else {
+          Toast.fail(res.data.msg)
+        }
+        location.reload()
+      })
+    },
   },
 }
 </script>

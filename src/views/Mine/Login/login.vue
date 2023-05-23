@@ -47,8 +47,8 @@ export default {
       localStorage.setItem('userinfo', JSON.stringify(res.data))
       localStorage.setItem(
         'token_expires_at',
-        JSON.stringify(Date.now() + 24 * 60 * 60 * 1000)
-      ) // 1天后过期
+        JSON.stringify(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      ) // 7天后过期
     },
   },
 }

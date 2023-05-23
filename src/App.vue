@@ -18,7 +18,7 @@
         >志愿服务社区</van-tabbar-item
       >
       <van-tabbar-item icon="newspaper-o" replace to="/chatgpt"
-        >服务机器人</van-tabbar-item
+        >ChatGPT</van-tabbar-item
       >
       <van-tabbar-item icon="user-o" replace to="/my">我的</van-tabbar-item>
     </van-tabbar>

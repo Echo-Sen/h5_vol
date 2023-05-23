@@ -120,11 +120,22 @@ const router = new Router({
       name: 'FeedBackInfo',
       component: () => import('@/views/Admin/FeedBackInfo/FeedBackInfo')
     },
+    {
+      path: '/activiesmanage',
+      name: 'ActivesManage',
+      component: () => import('@/views/Admin/ActivesManage/ActivesManage')
+    },
     // 活动发布页
     {
       path: '/publishactivesDetail',
       name: 'PublishActivesDetail',
-      component: () => import('@/views/Admin/PublishActives/PublishActivesDetail/PublishActivesDetail')
+      component: () => import('@/views/Admin/ActivesManage/PublishActivesDetail/PublishActivesDetail')
+    },
+    // 活动删除
+    {
+      path: '/deleteactiviesDetail',
+      name: 'DeleteActivesDetail',
+      component: () => import('@/views/Admin/ActivesManage/DeleteActives/DeleteActives')
     },
     // 校园帮
     {
@@ -172,6 +183,18 @@ const router = new Router({
       path: '/chatgpt',
       name: 'ChatGpt',
       component: () => import('@/views/MessagePanel/messagePanel')
+    },
+    // alluserinfo
+    {
+      path: '/alluserinfo',
+      name: 'AllUserInfo',
+      component: () => import('@/views/Admin/UserInfo/UserInfo')
+    },
+    // 后台权限管理
+    {
+      path: '/permissionmanage',
+      name: 'PermissionManage',
+      component: () => import('@/views/Admin/UserInfo/PermissionManage/PermisionManage')
     }
   ],
   mode: 'history'
@@ -182,7 +205,6 @@ router.beforeEach((to, from, next) => {
   if (!isLogin() && to.meta.requireAuth) {
     sessionStorage.setItem('redirectPath', to.path)// 保存用户本来要访问的页面路径
     Notify("将在3秒后跳转到登录页")
-
     setTimeout(() => {
       next({
         path: '/my'

@@ -16,7 +16,7 @@
           <tr>
             <th>姓名</th>
             <th>性别</th>
-            <th>学号</th>
+            <!-- <th>学号</th> -->
             <th>借伞时间</th>
             <th>还伞</th>
           </tr>
@@ -24,10 +24,10 @@
         <tbody>
           <tr v-for="(item, index) in inDue" :key="index">
             <td>{{ item.name }}</td>
-            <td>{{ item.sex }}</td>
-            <td>{{ item.studentNum }}</td>
-            <td>{{ item.time }}</td>
-            <td>{{ item.return ? '已还' : '未还' }}</td>
+            <td>{{ item.gender ? '女' : '男' }}</td>
+            <!-- <td>{{ item.studentNum }}</td> -->
+            <td>{{ item.borrow_time | transformTime(item.borrow_time) }}</td>
+            <td>{{ item.status }}</td>
           </tr>
         </tbody>
       </table>
@@ -38,7 +38,7 @@
           <tr>
             <th>姓名</th>
             <th>性别</th>
-            <th>学号</th>
+            <!-- <th>学号</th> -->
             <th>借伞时间</th>
             <th>逾期天数</th>
           </tr>
@@ -46,10 +46,10 @@
         <tbody>
           <tr v-for="(item, index) in overDue" :key="index">
             <td>{{ item.name }}</td>
-            <td>{{ item.sex }}</td>
-            <td>{{ item.studentNum }}</td>
-            <td>{{ item.time }}</td>
-            <td>{{ item.over }}</td>
+            <td>{{ item.gender ? '女' : '男' }}</td>
+            <!-- <td>{{ item.studentNum }}</td> -->
+            <td>{{ item.borrow_time | transformTime(item.borrow_time) }}</td>
+            <td>{{ item.borrow_time | OverHours(item.borrow_time) }}</td>
           </tr>
         </tbody>
       </table>
@@ -64,103 +64,23 @@
 
 <script>
 import { Empty } from 'vant'
+import { GetUmbrellaData } from '@/api/admin'
 export default {
   data() {
     return {
       currentId: 1,
-      inDue: [
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 0,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          return: 0,
-        },
-      ],
+      inDue: [],
       // 逾期名单
-      overDue: [
-        {
-          name: '邓森',
-          sex: '女',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 1,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 0,
-        },
-        {
-          name: '邓森',
-          sex: '男',
-          studentNum: 2021413598,
-          time: '2023-4-20 20:12:05',
-          over: 0,
-        },
-      ],
+      overDue: [],
+      threshold: 48 * 60 * 60 * 1000, // 48小时的毫秒数
+      now: new Date(), //当前时间
     }
   },
   components: {
     [Empty.name]: Empty,
+  },
+  mounted() {
+    this.GetData()
   },
   methods: {
     leftClick() {
@@ -182,6 +102,38 @@ export default {
         l_div.classList.remove('active')
         this.currentId = 2
       }
+    },
+    GetData() {
+      GetUmbrellaData(20).then((res) => {
+        this.list = res.data.data
+        this.list.forEach((item) => {
+          const result = this.isOverThreshold(item)
+          if (result) {
+            // 逾期用户
+            this.overDue.push(item)
+          } else {
+            this.inDue.push(item)
+          }
+        })
+      })
+    },
+    // 是否逾期
+    isOverThreshold({ status, borrow_time }) {
+      const diff = this.now.getTime() - new Date(borrow_time).getTime()
+      return status === '未还' && diff > this.threshold
+    },
+  },
+  filters: {
+    transformTime(isoString) {
+      // 数据中的更新时间转换
+      const date = new Date(isoString)
+      const transformTime = date.toLocaleString()
+      return transformTime
+    },
+    // 计算逾期的小时数
+    OverHours(borrow_time) {
+      const diff = this.now.getTime() - new Date(borrow_time).getTime()
+      return diff / 1000 / 60 / 60
     },
   },
 }
