@@ -7,11 +7,12 @@ export const oauthUrl = () => {
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: {
       // 这里指向跳转的地址
-      redirect_uri: encodeURI('http://www.ctbucqt.cn:8080/login'),
+      redirect_uri: encodeURI('http://www.ctbucqt.cn/login'),
     },
   }
   )
 }
+
 // 获取用户信息
 export const oauthUser = (code) => {
   return http(

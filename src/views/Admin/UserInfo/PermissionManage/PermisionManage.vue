@@ -70,23 +70,34 @@ export default {
   },
   mounted() {},
   methods: {
+    // 优化前
+    // getUserData() {
+    //   // 管理
+    //   const AdminList = JSON.parse(localStorage.getItem('AdminList'))
+    //   const UserList = JSON.parse(localStorage.getItem('UserList'))
+    //   AdminList.forEach((admin) => {
+    //     if (admin.id == this.$route.query.id) {
+    //       this.user = admin
+    //     }
+    //   })
+    //   if (this.user === undefined) {
+    //     UserList.forEach((user) => {
+    //       if (user.id == this.$route.query.id) {
+    //         this.user = user
+    //       }
+    //     })
+    //   }
+    // },
+
     getUserData() {
-      // 管理
       const AdminList = JSON.parse(localStorage.getItem('AdminList'))
       const UserList = JSON.parse(localStorage.getItem('UserList'))
-      AdminList.forEach((admin) => {
-        if (admin.id == this.$route.query.id) {
-          this.user = admin
-        }
-      })
-      if (this.user === undefined) {
-        UserList.forEach((user) => {
-          if (user.id == this.$route.query.id) {
-            this.user = user
-          }
-        })
+      this.user = AdminList.find((admin) => admin.id == this.$route.query.id)
+      if (!this.user) {
+        this.user = UserList.find((user) => user.id == this.$route.query.id)
       }
     },
+
     onConfirm(value) {
       this.value = value
       this.showPicker = false
@@ -130,6 +141,39 @@ export default {
         })
       }
     },
+
+    permission() {
+      let permissionType
+      let permissionPromise
+
+      if (this.value === '超级管理员') {
+        // 超级管理员
+        permissionType = 1
+        permissionPromise = AuthAdminPermission(
+          this.$route.query.id,
+          permissionType
+        )
+      } else if (this.value === '管理员') {
+        // 管理员
+        permissionType = 2
+        permissionPromise = AuthAdminPermission(
+          this.$route.query.id,
+          permissionType
+        )
+      } else {
+        // 普通用户
+        permissionPromise = CancelPermission(this.$route.query.id)
+      }
+      permissionPromise.then((res) => {
+        if (res.data.status === 1) {
+          Toast.success(res.data.msg)
+        } else {
+          Toast.fail(res.data.msg)
+        }
+        location.reload()
+      })
+    },
+
     onButtonClick() {},
   },
 }

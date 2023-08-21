@@ -1,6 +1,6 @@
 <template>
   <!-- 登录状态 -->
-  <div>
+  <div v-if="Permission">
     <header>
       <img :src="userInfo.avatar" alt="头像" />
       <h1>{{ userInfo.name }}</h1>
@@ -28,7 +28,7 @@
             ><van-icon name="guide-o" />使用指南</router-link
           >
         </li>
-        <li v-if="allowShow">
+        <li v-if="confirmAdmin">
           <router-link class="a" to="/admin"
             ><van-icon name="setting-o" />后台管理</router-link
           >
@@ -61,35 +61,19 @@ export default {
         avatar: '', // 头像
       },
       currentPermission: '',
+      confirmAdmin: '',
+      Permission: '',
     }
   },
-  mounted() {
+  mounted() {},
+  created() {
     if (localStorage.getItem('userinfo')) {
       this.setInfo()
     }
     this.ConfirmCurrentPermission()
     this.handleLoginSuccess()
   },
-  computed: {
-    Permission() {
-      if (this.currentPermission === 1) {
-        return '超级管理员'
-      } else if (this.currentPermission === 2) {
-        return '管理员'
-      } else {
-        return '用户'
-      }
-    },
-    allowShow() {
-      if (this.currentPermission === 1) {
-        return true
-      } else if (this.currentPermission === 2) {
-        return true
-      } else {
-        return false
-      }
-    },
-  },
+  computed: {},
   methods: {
     setInfo() {
       const resUserInfo = JSON.parse(window.localStorage.getItem('userinfo'))
@@ -111,7 +95,7 @@ export default {
         sessionStorage.removeItem('redirectPath')
         // 跳转回之前的页面
         sessionStorage.setItem('redirectPathAfter', this.$route.fullPath)
-        this.$router.replace(redirectPath)
+        // this.$router.replace(redirectPath)
       } else {
         return
       }
@@ -120,6 +104,17 @@ export default {
       getCurrentPermission().then((res) => {
         if (res.data.status === 1) {
           this.currentPermission = res.data.authority
+
+          if (this.currentPermission === 1) {
+            this.confirmAdmin = true
+            this.Permission = '超级管理员'
+          } else if (this.currentPermission === 2) {
+            this.confirmAdmin = true
+            this.Permission = '管理员'
+          } else {
+            this.confirmAdmin = false
+            this.Permission = '用户'
+          }
         }
       })
     },

@@ -106,8 +106,7 @@ export default {
             }
           })
         })
-        .catch(() => {
-        })
+        .catch(() => {})
     },
   },
   components: {

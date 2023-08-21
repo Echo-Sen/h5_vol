@@ -1,24 +1,15 @@
 <template>
   <div class="container">
-    <div class="view"><img class="img" src="@/assets/images/爱心雨伞.jpg" /></div>
-    <div
-      :class="{ noShow: !isFullscreen }"
-      ref="videoPreview"
-      class="bgc-f4f4f4"
-    >
-      <div class="video-show" />
-      <video id="video" ref="video" class="video vjs-fluid" autoplay />
-      <span class="change" @click="change">
-        <i class="el-icon-refresh" />
-      </span>
+    <div class="view">
+      <img class="img" src="@/assets/images/爱心雨伞.jpg" />
     </div>
     <div class="btn-container">
-      <img class="img" src="@/assets/images/cqt.webp" alt="" />
-      <button @click="ClickScan(1)" class="btn left">
-        <van-icon name="scan" />扫码借伞
+      <!-- <img class="img" src="@/assets/images/cqt.webp" alt="" /> -->
+      <button @click="scanQRCode('borrow')" class="btn left">
+        <van-icon name="scan" style="margin-right: 5%" />扫码借伞
       </button>
-      <button @click="ClickScan(0)" class="btn right">
-        <van-icon name="scan" />扫码还伞
+      <button @click="scanQRCode('return')" class="btn right">
+        <van-icon name="scan" style="margin-right: 5%" />扫码还伞
       </button>
     </div>
     <van-notice-bar
@@ -32,10 +23,9 @@
   </div>
 </template>
 <script>
-// 看到这个没，这个是一个小插件，能在手机上打开控制台，你打印的控制台信息和报错都能在这显示，具体方法自己百度
-// import Vconsole from "vconsole";
 import { BrowserMultiFormatReader } from '@zxing/library'
 import { postUmbrella } from '@/api/umbrella'
+import { getJDK } from '@/utils/config'
 import { Toast, NoticeBar } from 'vant'
 import FlowChart from '@/components/flowChart/flowChart.vue'
 export default {
@@ -46,175 +36,193 @@ export default {
   },
   data() {
     return {
-      loadingShow: false,
       // 这个就是从@zxing/library导出来的方法，new一个实例
-      codeReader: new BrowserMultiFormatReader(),
-      // 这个，用来储存扫码得到的结果
-      textContent: null,
-      // 这个，就是当前调用的摄像头的索引，为什么是6，我会在后面说的
-      num: 0,
-      // 这个就是扫描到的摄像头的数量
-      videoLength: '',
-      isFullscreen: false,
       upid: undefined,
     }
   },
+  mounted() {
+    this.getCurrentPageJDK()
+  },
   methods: {
-    ClickScan(e) {
-      console.log(e)
-      const video = this.$refs.videoPreview
-      // 让我们调用这个方法尝试打开摄像头
-      this.enterFullscreen(video)
-      this.openScan(e)
+    // 获取js-JDK
+    getCurrentPageJDK() {
+      const currentUrl = location.href
+      getJDK(currentUrl)
     },
-    // 开打开打
-    async openScan(e) {
-      const that = this
-      // 这个就是data里的哪个new出来的玩意，调用里面的方法
-      that.codeReader.listVideoInputDevices().then((videoInputDevices) => {
-        // 记录一下扫描到的摄像头数量，这个videoInputDevices是个数组，里面有扫描到的摄像头数据
-        this.videoLength = videoInputDevices.length
-        console.log(videoInputDevices)
-        // 这步我们来决定一下调用第几个摄像头，看到这个num没，这就是data里的
-        const firstDeviceId = videoInputDevices[that.num].deviceId
-        // 这调用另一个方法
-        that.decodeFromInputVideoFunc(
-          firstDeviceId,
-          videoInputDevices.length,
-          e
-        )
-      })
-      // 失败回调，为什么这里的失败回调这么写，后面会说的
-      // .catch((err) => {
-      //   this.num = 1
-      //   that.openScan()
-      //   console.error(err)
-      // })
-    },
-    //这就是在openScan里调的另一个方法，传入想调用的摄像头id和摄像头数量
-    decodeFromInputVideoFunc(firstDeviceId, length, status) {
-      const that = this
-      that.codeReader.reset() // 重置
-      that.textContent = null // 重置
-      that.codeReader.decodeFromVideoDevice(
-        firstDeviceId,
-        'video',
-        (result, err) => {
-          that.textContent = null
-          // 扫描成功 这个result就是扫描结果
-          if (result) {
-            that.textContent = result
-            // 对扫描结果做些什么
-            // 扫码成功退出全屏模式
-            this.exitFullscreen(video)
-            console.log(that.textContent)
-            const pattern = /upid:\s*([^,\}\s]+)/
-            const match = result.text.match(pattern)
-            this.upid = match[1]
-            console.log('upid:', this.upid)
-            if (status) {
-              this.postBorrowUp()
-            } else {
-              this.postReturnUp()
+    // 调起扫码
+    scanQRCode(status) {
+      wx.scanQRCode({
+        desc: 'scanQRCode desc',
+        needResult: 1, // 默认为0，扫描结果由企业微信处理，1则直接返回扫描结果，
+        scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是条形码（一维码），默认二者都有
+        success: function (res) {
+          // 回调
+          var result = res.resultStr //当needResult为1时返回处理结果
+          const pattern = /upid:\s*([^,\}\s]+)/
+          const match = result.match(pattern)
+          this.upid = match[1]
+          let option = {}
+          if (status === 'return') {
+            option = {
+              upid: this.upid,
+              type: 'return',
             }
-            
+          } else {
+            option = {
+              upid: this.upid,
+              type: 'borrow',
+            }
           }
-        }
-      )
-    },
-    // 点击切换前后摄像头
-    change() {
-      console.log('镜头切换')
-      // const that = this
-      // if (this.videoLength > 2) {
-      //   if (this.num < 2) {
-      //     this.num = 6
-      //   } else {
-      //     this.num = 1
-      //   }
-      //   that.textContent = null
-      //   that.codeReader && that.codeReader.reset()
-      //   that.openScan()
-      // } else {
-      //   if (that.num === 0) {
-      //     that.num = 1
-      //   } else {
-      //     that.num = 0
-      //   }
-      //   that.textContent = null
-      //   that.codeReader && that.codeReader.reset()
-      //   that.openScan()
-      // }
-    },
-    // 还伞
-    postReturnUp() {
-      const option = {
-        upid: this.upid,
-        type: 'return',
-      }
-      postUmbrella(option).then((res) => {
-        if (res.data.status === 1) {
-          // 成功
-          console.log(res)
-          Toast.success(res.data.msg)
-        } else {
-          Toast.fail(res.data.msg)
-          return
-        }
-      }).then(() =>{
-        location.reload()
+          postUmbrella(option).then((res) => {
+            if (res.data.status === 1) {
+              // 成功
+              Toast.success(res.data.msg)
+            } else {
+              Toast.fail(res.data.msg)
+              return
+            }
+          })
+        },
+        error: function (res) {
+          if (res.errMsg.indexOf('function_not_exist') > 0) {
+            Toast('版本过低请升级')
+          }
+        },
       })
     },
+
     // 借伞
-    // 上传借伞信息
-    postBorrowUp() {
-      const option = {
-        upid: this.upid,
-        type: 'borrow',
-      }
-      postUmbrella(option).then((res) => {
-        if (res.data.status === 1) {
-          // 成功
-          console.log(res)
-          Toast.success(res.data.msg)
-        } else {
-          Toast.fail(res.data.msg)
-          return
-        }
-      }).then(() =>{
-        location.reload()
-      })
-    },
-    // 进入全屏模式 传参：dom元素
-    enterFullscreen(video) {
-      // 自动全屏 三种方式适配不同浏览器
-      if (video.requestFullscreen) {
-        video.requestFullscreen()
-      } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen()
-      } else if (video.msRequestFullscreen) {
-        video.msRequestFullscreen()
-      }
-      this.isFullscreen = true
-    },
-    // 退出全屏模式 传参：dom元素
-    exitFullscreen(document) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen()
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen()
-      }
-      // 关闭视频流
-      const stream = document.srcObject
-      const tracks = stream.getTracks()
-      tracks.forEach((track) => {
-        track.stop()
-      })
-      document.srcObject = null
-      this.isFullscreen = false
-    },
+    // postBorrowUp() {
+    //   const option = {
+    //     upid: this.upid,
+    //     type: 'borrow',
+    //   }
+    //   postUmbrella(option)
+    //     .then((res) => {
+    //       if (res.data.status === 1) {
+    //         // 成功
+    //         console.log(res)
+    //         Toast.success(res.data.msg)
+    //       } else {
+    //         Toast.fail(res.data.msg)
+    //         return
+    //       }
+    //     })
+    //     .then(() => {
+    //       location.reload()
+    //     })
+    // },
+
+    // 以下为原生扫码调用需要 https 安全验证
+    //   async openScan(e) {
+    //     const that = this
+    //     // 这个就是data里的哪个new出来的玩意，调用里面的方法
+    //     that.codeReader.listVideoInputDevices().then((videoInputDevices) => {
+    //       // 记录一下扫描到的摄像头数量，这个videoInputDevices是个数组，里面有扫描到的摄像头数据
+    //       this.videoLength = videoInputDevices.length
+    //       console.log(videoInputDevices)
+    //       // 这步我们来决定一下调用第几个摄像头，看到这个num没，这就是data里的
+    //       const firstDeviceId = videoInputDevices[that.num].deviceId
+    //       // 这调用另一个方法
+    //       that.decodeFromInputVideoFunc(
+    //         firstDeviceId,
+    //         videoInputDevices.length,
+    //         e
+    //       )
+    //     })
+    //     // 失败回调
+    //     // .catch((err) => {
+    //     //   this.num = 1
+    //     //   that.openScan()
+    //     //   console.error(err)
+    //     // })
+    //   },
+    //   //这就是在openScan里调的另一个方法，传入想调用的摄像头id和摄像头数量
+    //   decodeFromInputVideoFunc(firstDeviceId, length, status) {
+    //     const that = this
+    //     that.codeReader.reset() // 重置
+    //     that.textContent = null // 重置
+    //     that.codeReader.decodeFromVideoDevice(
+    //       firstDeviceId,
+    //       'video',
+    //       (result, err) => {
+    //         that.textContent = null
+    //         // 扫描成功 这个result就是扫描结果
+    //         if (result) {
+    //           that.textContent = result
+    //           // 对扫描结果做些什么
+    //           // 扫码成功退出全屏模式
+    //           this.exitFullscreen(video)
+    //           console.log(that.textContent)
+    //           const pattern = /upid:\s*([^,\}\s]+)/
+    //           const match = result.text.match(pattern)
+    //           this.upid = match[1]
+    //           console.log('upid:', this.upid)
+    //           if (status) {
+    //             this.postBorrowUp()
+    //           } else {
+    //             this.postReturnUp()
+    //           }
+    //         }
+    //       }
+    //     )
+    //   },
+    //   // 点击切换前后摄像头
+    //   change() {
+    //     console.log('镜头切换')
+    //     // const that = this
+    //     // if (this.videoLength > 2) {
+    //     //   if (this.num < 2) {
+    //     //     this.num = 6
+    //     //   } else {
+    //     //     this.num = 1
+    //     //   }
+    //     //   that.textContent = null
+    //     //   that.codeReader && that.codeReader.reset()
+    //     //   that.openScan()
+    //     // } else {
+    //     //   if (that.num === 0) {
+    //     //     that.num = 1
+    //     //   } else {
+    //     //     that.num = 0
+    //     //   }
+    //     //   that.textContent = null
+    //     //   that.codeReader && that.codeReader.reset()
+    //     //   that.openScan()
+    //     // }
+    //   },
+
+    //   // 进入全屏模式 传参：dom元素
+    //   enterFullscreen(video) {
+    //     // 自动全屏 三种方式适配不同浏览器
+    //     if (video.requestFullscreen) {
+    //       video.requestFullscreen()
+    //     } else if (video.webkitRequestFullscreen) {
+    //       video.webkitRequestFullscreen()
+    //     } else if (video.msRequestFullscreen) {
+    //       video.msRequestFullscreen()
+    //     }
+    //     this.isFullscreen = true
+    //   },
+    //   // 退出全屏模式 传参：dom元素
+    //   exitFullscreen(document) {
+    //     if (document.exitFullscreen) {
+    //       document.exitFullscreen()
+    //     } else if (document.webkitExitFullscreen) {
+    //       document.webkitExitFullscreen()
+    //     } else if (document.msExitFullscreen) {
+    //       document.msExitFullscreen()
+    //     }
+    //     // 关闭视频流
+    //     const stream = document.srcObject
+    //     const tracks = stream.getTracks()
+    //     tracks.forEach((track) => {
+    //       track.stop()
+    //     })
+    //     document.srcObject = null
+    //     this.isFullscreen = false
+    //   },
+    // },
   },
 }
 </script>
@@ -244,7 +252,7 @@ export default {
 .tip {
   width: 10vw;
   height: 10vw;
-  background-color: rgb(45, 236, 45);
+  background-color: rgb(20, 163, 20);
   border: 1px solid #ffffff;
   border-radius: 50%;
   position: absolute;
@@ -283,15 +291,14 @@ export default {
 .view {
   width: 100%;
   height: 220px;
-  background-color: red;
   min-height: 200px;
   border-radius: 10px;
 }
 .btn {
   position: absolute;
   height: 50px;
-  width: 100px;
-  background-color: rgb(25, 222, 48);
+  width: 130px;
+  background-image: linear-gradient(to right, #bc95c6 0%, #7dc4cc 100%);
   border-radius: 50px;
   color: white;
   font-size: 18px;
@@ -305,8 +312,8 @@ export default {
 }
 .btn-container {
   width: 100%;
-  height: 70px;
-  background-color: pink;
+  height: 60px;
+  background-color: #fdfdfd;
   display: flex;
   justify-content: center;
   align-items: center;

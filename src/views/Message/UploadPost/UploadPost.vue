@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Back />
     <form onsubmit="return false">
       <textarea
         v-model="uploadFormData.context"
@@ -83,7 +82,7 @@ export default {
       } else {
         if (!this.disable) {
           Toast.fail('请勿反复提交')
-        } else{
+        } else {
           Toast.fail('请先输入')
         }
       }
@@ -99,7 +98,6 @@ export default {
           file.message = '上传成功'
         })
         .catch((error) => {
-          // console.log(error)
           file.status = 'false'
           file.message = '上传失败'
         })

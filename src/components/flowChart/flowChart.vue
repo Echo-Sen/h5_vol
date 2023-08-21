@@ -1,7 +1,6 @@
 <template>
   <div class="flow-chart">
     <!--   1 -->
-    <Back />
     <div class="flow-wrap">
       <div class="flow-title">
         <div class="number">一</div>

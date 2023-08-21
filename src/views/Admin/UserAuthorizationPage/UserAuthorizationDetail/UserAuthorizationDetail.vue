@@ -77,7 +77,7 @@ export default {
     this.getList()
   },
   methods: {
-    // 回去详细信息
+    // 获取详细信息
     getList() {
       getPermissionList().then((res) => {
         res.data.data.forEach((item) => {

@@ -227,7 +227,7 @@ export default {
           Toast.success('发布成功')
         })
         .catch((error) => {
-Toast.fail('发布失败')
+          Toast.fail('发布失败')
         })
       location.reload()
     },

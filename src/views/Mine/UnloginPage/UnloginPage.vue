@@ -5,10 +5,10 @@
         <van-icon
           name=" icon-morentouxiang"
           class-prefix="iconfont"
-          size="105"
+          size="80"
         />
+        <div class="profile__name">点击登录</div>
       </div>
-      <div class="profile__name">点击登录</div>
     </div>
     <section>
       <ul>
@@ -35,12 +35,6 @@
 <script>
 import { oauthUrl } from '@/api/user'
 export default {
-  data() {
-    return {}
-  },
-  created() {
-    this.$watch('$route', this.handleRouteChange)
-  },
   methods: {
     async login() {
       this.getOathUrl()
@@ -61,14 +55,16 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 120px; /* 可以根据实际情况调整高度 */
+  /* background-color: #1ce569; */
+  /* min-height: 100px; 可以根据实际情况调整高度 */
 }
 
 .profile__avatar {
-  width: 80px;
-  height: 80px;
+  /* width: 80px; */
+  /* height: 0px; */
   /* margin: 0 auto; */
-  margin-top: 5%;
+  /* background-color: #e55454; */
+  /* margin-top: 5%; */
 }
 
 .iconfont {
@@ -78,7 +74,8 @@ export default {
 }
 
 .profile__name {
-  margin-top: 10%;
+  margin-top: -20%;
+
   font-size: 18px;
   text-align: center;
   color: #666;

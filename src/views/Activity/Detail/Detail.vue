@@ -143,7 +143,6 @@ export default {
       if (this.isLogin()) {
         const id = this.$route.query.id
         const signUpButton = this.$refs.button
-        console.log(id)
         isSignUp(id).then((res) => {
           if (res.data.isreg) {
             signUpButton[0].classList.remove('able')

@@ -129,7 +129,7 @@ export default {
     [Sticky.name]: Sticky,
   },
   mounted() {
-    this.id = this.$route.query.id
+    his.id = this.$route.query.idt
     this.GetComments()
     this.setOnlyData()
     this.$nextTick(() => {
@@ -167,14 +167,6 @@ export default {
     // 获取评论信息
     GetComments() {
       GetCommentsData(this.id).then((res) => {
-        // this.comments = [
-        //   ...this.comments,
-        //   ...res.data.data.filter((item) => {
-        //     !this.comments.some((i) => {
-        //       i.id === item.id
-        //     })
-        //   }),
-        // ]
         res.data.data.forEach((item) => {
           this.comments.unshift(item)
         })
@@ -213,14 +205,13 @@ export default {
         })
       }
     },
+    // 聚焦键盘
     replay(id) {
       const input = this.$refs.input
       // 将光标置于输入框中
       input.focus()
       // 打开键盘
       input.select()
-
-      
     },
   },
   filters: {
@@ -349,7 +340,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
 }
 .title {
   font-size: 20px;

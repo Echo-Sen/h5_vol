@@ -87,8 +87,7 @@ import {
   ShareSheet,
   ImagePreview,
 } from 'vant'
-import { getCommunityData } from '@/api/community'
-import { postLiked, postIsLike } from '@/api/community'
+import { postLiked, postIsLike,getCommunityData } from '@/api/community'
 export default {
   data() {
     return {
@@ -128,6 +127,7 @@ export default {
     } else {
       this.data = JSON.parse(localStorage.getItem('communityData'))
     }
+
     this.$nextTick(() => {
       // 个人对帖子的点赞情况
       if (localStorage.getItem('userinfo')) {
@@ -247,8 +247,6 @@ export default {
           this.finished = true
         }
       })
-
-      // this.finished = true
     },
     // 点赞
     async clickLikes(id) {

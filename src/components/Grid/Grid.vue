@@ -12,7 +12,7 @@
       icon=" icon-umbrella"
       icon-prefix="iconfont"
       text="爱心雨伞"
-      to="/borrowumbrella/?upid=7"
+      to="/borrowumbrella"
     />
     <van-grid-item
       icon=" icon-yuangongfengcai"

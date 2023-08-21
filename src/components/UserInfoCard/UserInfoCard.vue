@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { Popover, Toast } from 'vant'
+import { Popover } from 'vant'
 export default {
   name: 'UserCard',
   components: {

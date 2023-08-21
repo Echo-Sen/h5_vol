@@ -242,6 +242,7 @@ export default {
       const transformTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`
       return transformTime
     },
+    // 触底刷新
     onLoad() {
       // 获取每条最早的时间
       const time = this.transformTime(
@@ -260,7 +261,6 @@ export default {
             })
           }),
         ]
-        console.log(this.activities)
         this.loading = true
         // 如果返回数据为空则设置已完成
         this.finished = true

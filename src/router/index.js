@@ -46,7 +46,7 @@ const router = new Router({
     },
     {
       path: '/uploadpost',
-      name: UploadPost,
+      name: 'UploadPost',
       component: UploadPost,
       meta: { requireAuth: true }
     }, {

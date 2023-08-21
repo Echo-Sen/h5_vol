@@ -1,5 +1,5 @@
 <template>
-<!-- chatGPT -->
+  <!-- chatGPT -->
   <div class="chat_commento">
     <!-- top -->
     <div class="chat_top">
@@ -141,12 +141,12 @@ export default {
       // 返回处理后的字符串
       return input
     },
-    // 触底
+
+    // 进入触底
     pullBottom() {
       this.$nextTick(() => {
         const myElement = this.$refs.myElement
-        const height = this.$refs.myElement.scrollHeight
-        myElement.scrollTop = height
+        myElement.scrollTop = this.$refs.myElement.scrollHeight
       })
     },
     // 机器人回复
@@ -166,10 +166,10 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           Authorization:
-            'Bearer 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',
+            'Bearer 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',
         },
         httpsAgent: agent, // 如果代理协议是https，则需要使用httpsAgent
-        timeout: 1000 * 30, // 超时时间
+        timeout: 1000, // 超时时间
       }
       axios
         .post(apiUrl, params, LocalOptions)

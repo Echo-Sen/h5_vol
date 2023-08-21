@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { Button } from 'vant'
 import { oauthUser } from '@/api/user'
 export default {
   mounted() {
@@ -13,9 +12,9 @@ export default {
     // 开始倒计时
     this.interval = setInterval(() => {
       this.countdown--
-      if (this.countdown === 0) {
+      if (this.countdown === 0 || localStorage.getItem('userinfo')) {
         clearInterval(this.interval) // 倒计时结束时清除定时器
-        window.location.href = 'http://www.ctbucqt.cn:8080/my'
+        this.$router.replace('/my')
       }
     }, 1000)
   },
@@ -27,9 +26,6 @@ export default {
       res: ' ',
       countdown: 3, // 设置初始倒计时时间
     }
-  },
-  components: {
-    [Button.name]: Button,
   },
   methods: {
     login() {
@@ -43,7 +39,6 @@ export default {
     async getOathUser() {
       const code = window.location.href.split('code=')[1].split('#')[0]
       const res = await oauthUser(code)
-      this.res = res.data
       localStorage.setItem('userinfo', JSON.stringify(res.data))
       localStorage.setItem(
         'token_expires_at',

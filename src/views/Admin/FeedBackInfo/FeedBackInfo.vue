@@ -52,7 +52,6 @@ export default {
     goDetail() {
       GetFeedBackInfo().then((res) => {
         this.list = res.data.data
-        // localStorage.setItem('feedBack', JSON.stringify(this.list))
       })
     },
   },
@@ -64,7 +63,6 @@ export default {
   min-height: 100px;
   width: 100%;
   margin: 5px;
-  /* background-color: red; */
 }
 
 .van-card {
